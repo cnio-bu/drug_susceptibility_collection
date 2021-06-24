@@ -1,0 +1,10 @@
+name: file_manipulation
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - r-tidyverse
+
+

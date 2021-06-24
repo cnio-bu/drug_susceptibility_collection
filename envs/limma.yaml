@@ -1,0 +1,10 @@
+name: limma
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - bioconductor-limma
+  - bioconductor-edger
+
