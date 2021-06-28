@@ -1,0 +1,8 @@
+name: gdsc_arrayexpress
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - bioconductor-arrayexpress=1.52.0

@@ -3,3 +3,4 @@ raw_ccle_reads
 celligner_data,
 prism_response_curves,
 prism_treatment_info,
+gdsc_response_curves,
