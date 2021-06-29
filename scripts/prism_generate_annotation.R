@@ -9,13 +9,6 @@ count_matrix           <- snakemake@input[['count_matrix']]
 compounds_lines_profiled   <- snakemake@output[['compounds_lines_profiled']]
 auc_models_candidates      <- snakemake@output[['auc_models_candidates']]
 
-
-### FUNCTIONS DEFINITIONS ###
-save_candidate_compound  <- function(df){
-write.csv(df,paste0(auc_models_candidates, '/',unique(df$broad_id),".csv"))
-return(df)
-}
-
 ## load tables
 response_curves <- data.table::fread(response_curves) %>%
                   as.data.frame()
