@@ -2,12 +2,9 @@ name: gdsc_array_normalization
 channels:
   - conda-forge
   - bioconda
-  - r
   - defaults
 dependencies:
-  - bioconductor-oligo=1.54.1
-  - bioconductor-pd.hg.u219=3.12.0
-  - bioconductor-preprocesscore=1.52.1=r40hd029910_0
-  - libblas=3.9.0=9_openblas
-  - libcblas=3.9.0=9_openblas
-
+  - bioconductor-oligo=1.46.0
+  - bioconductor-oligoclasses
+  - bioconductor-pd.hg.u219
+  - glib=2.56

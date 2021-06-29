@@ -1,5 +1,5 @@
 library('oligo')
-library('preprocessCore')
+library('oligoClasses')
 
 ### SNAKEMAKE I/O ###
 raw_cel_path      <- snakemake@input[['cel_files']]
