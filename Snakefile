@@ -13,12 +13,14 @@ def get_prism_genesets(wildcards):
 
 rule all:
     input:
-        get_prism_genesets,
-        f'{results}/gdsc/array_data/normalized_arrays.rds'
+        f'{results}/annotation/cell_line_annotation.csv',
+       # get_prism_genesets,
+        f'{results}/gdsc/compounds_lines_profiled.csv'
 
 
 
 ## Load rules ##
+include: 'rules/common.smk'
 include: 'rules/gdsc_arrays_signatures.smk'
 include: 'rules/prism_signatures.smk'
 
