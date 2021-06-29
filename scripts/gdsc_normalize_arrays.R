@@ -22,6 +22,14 @@ raw_exprset <- oligo::read.celfiles(filenames = file.path(raw_cel_path,
                                     verbose = FALSE, phenoData = SDRF)
 
 
-## TADO: download pd.hg.u219_3.12.0
 norm_eset <- oligo::rma(raw_exprset, background = TRUE, normalize = TRUE)
-saveRDS(norm_eset, normalized_arrays)
+
+## Save it as a matrix directly, no need to keep the whole object.
+## Make sure to change colnames 
+pdata <- phenoData(norm_eset) 
+pdata <- as.data.frame(pdata@data)
+
+eset            <- exprs(norm_eset)
+colnames(eset)  <- pdata[colnames(eset), 'Characteristics.cell.line.']
+
+saveRDS(eset, normalized_arrays)

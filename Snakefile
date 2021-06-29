@@ -11,11 +11,18 @@ def get_prism_genesets(wildcards):
            broad_id=glob_wildcards(os.path.join(checkpoint_output, "{brd_id}.csv")).brd_id)
 
 
+def get_gdsc_ebayes(wildcards):
+    checkpoint_output = checkpoints.gdsc_generate_compound_curves.get(**wildcards).output['auc_models_candidates']
+
+    return expand(f'{results}/gdsc/ebayes/{{drug_id}}_eBayes.rds',
+           drug_id=glob_wildcards(os.path.join(checkpoint_output, "{drug_id}.csv")).drug_id)
+
+
 rule all:
     input:
-        f'{results}/annotation/cell_line_annotation.csv',
        # get_prism_genesets,
-        f'{results}/gdsc/compounds_lines_profiled.csv'
+       get_gdsc_ebayes
+
 
 
 

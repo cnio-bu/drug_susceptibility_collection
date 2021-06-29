@@ -1,10 +1,10 @@
-name: gdsc_limma
+name: gdsc_generate_model_curves
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconductor-oligo=1.46.0
+  - bioconductor-oligo
   - bioconductor-oligoclasses
   - bioconductor-pd.hg.u219
-  - bioconductor-limma
+  - r-tidyverse
