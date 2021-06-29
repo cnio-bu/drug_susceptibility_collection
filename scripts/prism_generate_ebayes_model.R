@@ -12,7 +12,7 @@ ccle_counts           <- readRDS(raw_gene_counts)
 compound_to_test      <- read.csv(compound_to_test)
 
 compound_to_test$auc            <- as.numeric(compound_to_test$auc)
-compound_to_test$CL_tumor_class <- as.factor(compound_to_test$CL_tumor_class)
+compound_to_test$lineage        <- as.factor(compound_to_test$lineage)
 
 ## Subset the counts
 lines_to_test <- compound_to_test$depmap_id
@@ -21,7 +21,7 @@ count_matrix  <- ccle_counts[,lines_to_test]
 rownames(compound_to_test) <- compound_to_test$depmap_id
 
 ## voom model
-design <- model.matrix(~CL_tumor_class + auc, data=compound_to_test)
+design <- model.matrix(~lineage + auc, data=compound_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[,rownames(design)]

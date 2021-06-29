@@ -12,12 +12,11 @@ rule prism_get_rnaseq_counts:
 ## TODO: This rule can be split in 2
 checkpoint prism_annotate_models:
     input:
-        response_curves =  datasets.loc['prism_response_curves', 'directory'],
-        celligner_data  =  datasets.loc['celligner_data', 'directory'],
+        response_curves       =  datasets.loc['prism_response_curves', 'directory'],
+        cell_lines_annotation =  rules.annotate_cell_lines.output.cell_line_annotation,
         count_matrix=rules.prism_get_rnaseq_counts.output.raw_gene_counts
     output:
         auc_models_candidates=directory(f'{results}/prism/auc_models_candidates'),
-        cell_line_annotation=f'{results}/prism/cell_line_annotation.csv',
         compounds_lines_profiled=f'{results}/prism/compounds_lines_profiled.csv'
     conda:
         '../envs/file_manipulation.yaml'

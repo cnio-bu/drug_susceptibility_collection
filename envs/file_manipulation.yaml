@@ -6,5 +6,6 @@ channels:
   - defaults
 dependencies:
   - r-tidyverse
+  - pandas
 
 
