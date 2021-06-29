@@ -13,7 +13,7 @@ rule prism_get_rnaseq_counts:
 checkpoint prism_annotate_models:
     input:
         response_curves       =  datasets.loc['prism_response_curves', 'directory'],
-        cell_lines_annotation =  rules.annotate_cell_lines.output.cell_line_annotation,
+        cell_lines_annotation =  rules.annotate_cell_lines.output.cell_lines_annotation,
         count_matrix=rules.prism_get_rnaseq_counts.output.raw_gene_counts
     output:
         auc_models_candidates=directory(f'{results}/prism/auc_models_candidates'),
