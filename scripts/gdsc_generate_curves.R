@@ -3,7 +3,7 @@ library('tidyverse')
 
 ### SNAKEMAKE I/O ###
 gdsc_dose_response_curves      <- snakemake@input[['dose_response_curves']]
-normalized_lines_arrays        <- snakemake@input[['normalized_arrays']]
+normalized_lines_arrays        <- snakemake@input[['normalized_lines_arrays']]
 cell_lines_annotation          <- snakemake@input[['cell_lines_annotation']]
 
 auc_models_candidates          <- snakemake@output[['auc_models_candidates']]

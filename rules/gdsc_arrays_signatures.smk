@@ -16,6 +16,8 @@ rule gdsc_normalize_arrays:
         cel_files= rules.gdsc_download_cel_files.output.raw_cel_files
     output:
         normalized_arrays=f'{results}/gdsc/array_data/normalized_arrays.rds'
+    log:
+        'logs/gdsc_normalize_arrays.log'
     threads: 1
     resources:
         mem_mb=20480

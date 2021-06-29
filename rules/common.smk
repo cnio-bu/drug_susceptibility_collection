@@ -8,6 +8,6 @@ rule annotate_cell_lines:
     resources:
         mem_mb=4096
     conda:
-        '../envs/file_manipulation.yaml'
+        '../envs/common_file_manipulation.yaml'
     script:
         '../scripts/common_annotate_lines.py'

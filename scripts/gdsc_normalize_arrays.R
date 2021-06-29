@@ -5,6 +5,10 @@ library('oligoClasses')
 raw_cel_path      <- snakemake@input[['cel_files']]
 normalized_arrays <- snakemake@output[['normalized_arrays']]
 
+# Setup log file
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log)
+sink(log, type = "message")
 
 sdrf_location <- file.path(raw_cel_path, "E-MTAB-3610.sdrf.txt")
 SDRF          <- read.delim(sdrf_location)

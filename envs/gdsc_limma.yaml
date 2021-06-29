@@ -1,0 +1,10 @@
+name: gdsc_limma
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconductor-oligo=1.46.0
+  - bioconductor-oligoclasses
+  - bioconductor-pd.hg.u219
+  - bioconductor-limma

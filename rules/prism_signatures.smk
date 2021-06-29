@@ -4,7 +4,7 @@ rule prism_get_rnaseq_counts:
     output:
         raw_gene_counts=f'{results}/prism/raw_ccle_counts.rds'
     conda:
-        '../envs/file_manipulation.yaml'
+        '../envs/common_file_manipulation.yaml'
     script:
         '../scripts/prism_raw_counts_from_expected_counts.R'
 
@@ -19,7 +19,7 @@ checkpoint prism_annotate_models:
         auc_models_candidates=directory(f'{results}/prism/auc_models_candidates'),
         compounds_lines_profiled=f'{results}/prism/compounds_lines_profiled.csv'
     conda:
-        '../envs/file_manipulation.yaml'
+        '../envs/common_file_manipulation.yaml'
     script:
         '../scripts/prism_generate_annotation.R'
 
@@ -31,7 +31,7 @@ rule prism_compounds_diffexpr:
     output:
         ebayes= f'{results}/prism/ebayes/{{broad_id}}_eBayes.rds'
     conda:
-        '../envs/limma.yaml'
+        '../envs/prism_limma.yaml'
     script:
         '../scripts/prism_generate_ebayes_model.R'
 
