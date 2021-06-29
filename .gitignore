@@ -1,3 +1,4 @@
 .snakemake/*
 .vscode
+logs/*
 datasets.csv
