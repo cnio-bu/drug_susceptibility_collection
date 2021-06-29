@@ -68,7 +68,7 @@ write.csv(lines_and_compounds, file = compounds_lines_profiled, row.names=FALSE)
 
 ## Keep compounds with at least 10 profiled lines
 compounds_to_test <- lines_and_compounds[lines_and_compounds$profiled_lines >= 10, 'broad_id']
-response_curves   <- filter(response_curves, broad_id %in% compounds_to_test,)
+response_curves   <- filter(response_curves, broad_id %in% compounds_to_test)
 
 ## Annotate cell line histology
 response_curves <- merge(x=response_curves,
