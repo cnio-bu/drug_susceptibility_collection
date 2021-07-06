@@ -58,7 +58,9 @@ drug_info <- drug_info[drug_info$screen_id == 'HTS002',]
 
 bayes_results <- readRDS(eBayes_model)
 
-all_genes <- topTable(bayes_results, coef = 'auc',number = Inf, adjust.method = 'fdr', p.value=0.05)
+all_genes <- topTable(bayes_results, coef = 'auc', 
+                     number = Inf, adjust.method = 'fdr',
+                     p.value=0.05)
 
 if(!dir.exists(file.path(geneset_directory))){
     dir.create(geneset_directory)}
