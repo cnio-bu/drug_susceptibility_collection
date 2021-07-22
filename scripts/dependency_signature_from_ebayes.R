@@ -14,21 +14,20 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
     
     ## Split the table between dep_associated_genes (positive logfold) 
     ## and non.dep associated genes (negative
-    )
     dependency_upregulated         <- deg_genes[deg_genes$logFC >= 1, 'ID']
     dependency_downregulated       <- deg_genes[deg_genes$logFC <= -1,'ID']
     
     if(length(dependency_upregulated) >= 15){
         
-       candidate_genes <- extract_top_genes(deg_genes, 'dependent_up')
+       candidate_genes  <- extract_top_genes(deg_genes, 'dependent_up')
        sensitivity_gset <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
        setName(sensitivity_gset) <- paste(sig_name, 'UP', sep='_')
        
-        GSEABase::toGmt(sensitivity_gset, con = paste(geneset_directory, '/', sig_name, '_dependency__UP', '.gmt', sep=''))
+        GSEABase::toGmt(sensitivity_gset, con = paste(geneset_directory, '/', sig_name, '_dependency_UP', '.gmt', sep=''))
     }
     if(length(dependency_downregulated) >= 15){
         candidate_genes <- extract_top_genes(deg_genes, 'dependent_down')
-        resistance_set <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
+        resistance_set  <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
         setName(resistance_set) <- paste(sig_name, 'DN', sep='_')
         
         GSEABase::toGmt(resistance_set, con = paste(geneset_directory, '/', sig_name, '_dependency_DN', '.gmt', sep='')) 

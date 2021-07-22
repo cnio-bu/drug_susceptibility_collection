@@ -30,12 +30,13 @@ rule dependencies_generate_ebayes:
     script:
         '../scripts/dependencies_generate_ebayes_model.R'
 
+
 rule dependencies_geneset_from_ebayes:
     input:
-        fitted_bayes= rules.dependencies_generate_ebayes.output.ebayes
+        fitted_bayes=rules.dependencies_generate_ebayes.output.ebayes
     output:
         bidirectional_geneset=directory(f'{results}/dependencies/genesets/{{gene}}')
     conda:
         '../envs/generate_genesets.yaml'
     script:
-        '../scripts/prism_signature_from_ebayes.R'
+        '../scripts/dependency_signature_from_ebayes.R'
