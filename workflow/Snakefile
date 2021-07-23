@@ -1,6 +1,6 @@
 import pandas as pd
 
-configfile: "config.yaml"
+configfile: "config/config.yaml"
 
 datasets = pd.read_csv('datasets.csv', sep=',', index_col=0)
 results  = config['results_directory']
