@@ -54,6 +54,8 @@ all_genes <- topTable(bayes_results, coef = 'probability',
                      number = Inf, adjust.method = 'fdr',
                      p.value=0.05)
 
+all_genes$ID <- rownames(all_genes)
+
 if(!dir.exists(file.path(geneset_directory))){
     dir.create(geneset_directory)}
 
