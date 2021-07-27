@@ -36,12 +36,28 @@ rule prism_compounds_diffexpr:
         '../scripts/prism_generate_ebayes_model.R'
 
 
-rule prism_geneset_from_diffexpr:
+##TODO: These two rules could benefit from rule inheritance
+rule prism_geneset_from_ebayes_classic:
     input:
         fitted_bayes= rules.prism_compounds_diffexpr.output.ebayes,
         treatment_info = datasets.loc['prism_treatment_info', 'directory']
     output:
-        bidirectional_geneset=directory(f'{results}/prism/genesets/{{broad_id}}')
+        bidirectional_geneset=directory(f'{results}/prism/genesets/classic/{{broad_id}}')
+    params:
+        signature_type='classic'
+    conda:
+        '../envs/generate_genesets.yaml'
+    script:
+        '../scripts/prism_signature_from_ebayes.R'
+
+rule prism_geneset_from_ebayes_fold:
+    input:
+        fitted_bayes= rules.prism_compounds_diffexpr.output.ebayes,
+        treatment_info = datasets.loc['prism_treatment_info', 'directory']
+    output:
+        bidirectional_geneset=directory(f'{results}/prism/genesets/fold/{{broad_id}}')
+    params:
+        signature_type='fold'
     conda:
         '../envs/generate_genesets.yaml'
     script:
