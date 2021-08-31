@@ -1,10 +1,9 @@
-library('GSEABase')
-library('limma')
-library('dplyr')
+suppressMessages(library('GSEABase'))
+suppressMessages(library('limma'))
+suppressMessages(library('dplyr'))
 
 
 ## SNAKEMAKE I/O  ##
-
 eBayes_model       <- snakemake@input[['fitted_bayes']]
 drug_info          <- snakemake@input[['treatment_info']]
 
@@ -14,6 +13,11 @@ compound_id       <- snakemake@wildcards[['broad_id']]
 
 ## SNAKEMAKE PARAMS ##
 signature_type    <- tolower(as.character(snakemake@params[['signature_type']]))
+
+# Logging
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log)
+sink(log, type = "message")
 
 ## If signature_type == 'Classic',
 ## then we'll take the top/bottom 250 genes sorted by T.statistics

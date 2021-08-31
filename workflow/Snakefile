@@ -4,6 +4,7 @@ configfile: "config/config.yaml"
 
 datasets = pd.read_csv('config/datasets.csv', sep=',', index_col=0)
 results  = config['results_directory']
+LOGDIR   = config['log_directory']
 
 
 def get_prism_genesets_classic(wildcards):

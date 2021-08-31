@@ -1,11 +1,17 @@
-library('edgeR')
-library('limma')
+suppressMessages(library('edgeR'))
+suppressMessages(library('limma'))
 
 ### SNAKEMAKE I/O ###
 compound_to_test      <- snakemake@input[['compound_to_test']]
 raw_gene_counts       <- snakemake@input[['raw_gene_counts']]
 
 ebayes_model          <- snakemake@output[['ebayes']]
+
+## Logging
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log)
+sink(log, type = "message")
+
 
 ## Load and set data types manually just in case
 ccle_counts           <- readRDS(raw_gene_counts)

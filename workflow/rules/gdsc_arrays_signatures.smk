@@ -18,7 +18,7 @@ rule gdsc_normalize_arrays:
     output:
         normalized_arrays=f'{results}/gdsc/array_data/normalized_arrays.rds'
     log:
-        'logs/gdsc_normalize_arrays.log'
+        f"{LOGDIR}/gdsc_normalize_arrays/log.log"
     threads: 1
     resources:
         mem_mb=20480
@@ -38,7 +38,7 @@ checkpoint gdsc_generate_compound_curves:
         auc_models_candidates=directory(f'{results}/gdsc/auc_models_candidates'),
         compounds_lines_profiled=f'{results}/gdsc/compounds_lines_profiled.csv'
     log:
-        'logs/gdsc_generate_compound_curves.log'
+        f"{LOGDIR}/gdsc_generate_compound_curves/log.log"
     threads: 1
     resources:
         mem_mb=16000

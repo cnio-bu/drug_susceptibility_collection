@@ -4,3 +4,4 @@ workflow/.snakemake/*
 log/*
 datasets.csv
 config.yaml
+log

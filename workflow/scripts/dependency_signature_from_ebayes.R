@@ -1,6 +1,6 @@
-library('GSEABase')
-library('limma')
-library('dplyr')
+suppressMessages(library('GSEABase'))
+suppressMessages(library('limma'))
+suppressMessages(library('dplyr'))
 
 
 ## SNAKEMAKE I/O  ##
@@ -9,6 +9,13 @@ eBayes_model       <- snakemake@input[['fitted_bayes']]
 geneset_directory  <- snakemake@output[['bidirectional_geneset']]
 
 gene_name          <- snakemake@wildcards[['gene']]
+
+## Logging
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log)
+sink(log, type = "message")
+
+
  
 generate_bidirectional_signature <- function(sig_name, deg_genes){
     

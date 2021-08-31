@@ -36,7 +36,7 @@ def main():
     # Get rid of genes with NaN values, usually due to defective processing/contamination
     filtered_crispr_data = raw_crispr_data.dropna(axis=0)
 
-      # Drop engineered cell lines, If present
+    # Drop engineered cell lines, If present
     is_engineered = lines.loc[lines['lineage'].str.contains('engineered'), 'stripped_cell_line_name']
     filtered_crispr_data = filtered_crispr_data.loc[:,~filtered_crispr_data.columns.isin(is_engineered)]
 

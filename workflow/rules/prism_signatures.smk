@@ -30,6 +30,8 @@ rule prism_compounds_diffexpr:
         compound_to_test = f'{results}/prism/auc_models_candidates/{{broad_id}}.csv'
     output:
         ebayes= f'{results}/prism/ebayes/{{broad_id}}_eBayes.rds'
+    log:
+        f"{LOGDIR}/prism_compounds_diffexpr/{{broad_id}}.log"
     conda:
         '../envs/prism_limma.yaml'
     script:
@@ -43,6 +45,8 @@ rule prism_geneset_from_ebayes_classic:
         treatment_info = datasets.loc['prism_treatment_info', 'directory']
     output:
         bidirectional_geneset=directory(f'{results}/prism/genesets/classic/{{broad_id}}')
+    log:
+        f"{LOGDIR}/prism_geneset_from_ebayes/{{broad_id}}_classic.log"
     params:
         signature_type='classic'
     conda:
@@ -50,12 +54,15 @@ rule prism_geneset_from_ebayes_classic:
     script:
         '../scripts/prism_signature_from_ebayes.R'
 
+
 rule prism_geneset_from_ebayes_fold:
     input:
         fitted_bayes= rules.prism_compounds_diffexpr.output.ebayes,
         treatment_info = datasets.loc['prism_treatment_info', 'directory']
     output:
         bidirectional_geneset=directory(f'{results}/prism/genesets/fold/{{broad_id}}')
+    log:
+        f"{LOGDIR}/prism_geneset_from_ebayes/{{broad_id}}_fold.log"
     params:
         signature_type='fold'
     conda:
