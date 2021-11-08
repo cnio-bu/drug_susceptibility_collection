@@ -5,7 +5,7 @@ checkpoint ctrp_annotate_models:
         cell_meta         =  datasets.loc['ctrp_cell_meta', 'directory'],
         experiment_meta   =  datasets.loc['ctrp_experiment_meta', 'directory'],
         cell_lines_annotation =  rules.annotate_cell_lines.output.cell_lines_annotation,
-        rna_count_matrix      =  rules.prism_get_rnaseq_counts.output.raw_gene_counts
+        rna_count_matrix      =  rules.get_rnaseq_counts.output.raw_gene_counts
     output:
         auc_models_candidates=directory(f'{results}/ctrp/auc_models_candidates'),
         compounds_lines_profiled=f'{results}/ctrp/compounds_lines_profiled.csv'
@@ -22,7 +22,7 @@ checkpoint ctrp_annotate_models:
 
 rule ctrp_generate_ebayes:
     input:
-        raw_gene_counts  = rules.prism_get_rnaseq_counts.output.raw_gene_counts,
+        raw_gene_counts  = rules.get_rnaseq_counts.output.raw_gene_counts,
         compound_to_test = f'{results}/ctrp/auc_models_candidates/{{broad_id}}.csv'
     output:
         ebayes= f'{results}/ctrp/ebayes/{{broad_id}}_eBayes.rds'

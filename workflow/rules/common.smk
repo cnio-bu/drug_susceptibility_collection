@@ -11,3 +11,14 @@ rule annotate_cell_lines:
         '../envs/common_file_manipulation.yaml'
     script:
         '../scripts/common_annotate_lines.py'
+
+
+rule prism_get_rnaseq_counts:
+    input:
+        raw_expected_counts=datasets.loc['raw_ccle_reads', 'directory']
+    output:
+        raw_gene_counts=f'{results}/prism/raw_ccle_counts.rds'
+    conda:
+        '../envs/common_file_manipulation.yaml'
+    script:
+        '../scripts/prism_raw_counts_from_expected_counts.R'

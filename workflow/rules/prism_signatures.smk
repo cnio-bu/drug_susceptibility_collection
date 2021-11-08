@@ -1,20 +1,9 @@
-rule prism_get_rnaseq_counts:
-    input:
-        raw_expected_counts=datasets.loc['raw_ccle_reads', 'directory']
-    output:
-        raw_gene_counts=f'{results}/prism/raw_ccle_counts.rds'
-    conda:
-        '../envs/common_file_manipulation.yaml'
-    script:
-        '../scripts/prism_raw_counts_from_expected_counts.R'
-
-
 ## TODO: This rule can be split in 2
 checkpoint prism_annotate_models:
     input:
         response_curves       =  datasets.loc['prism_response_curves', 'directory'],
         cell_lines_annotation =  rules.annotate_cell_lines.output.cell_lines_annotation,
-        count_matrix=rules.prism_get_rnaseq_counts.output.raw_gene_counts
+        count_matrix          =  rules.get_rnaseq_counts.output.raw_gene_counts
     output:
         auc_models_candidates=directory(f'{results}/prism/auc_models_candidates'),
         compounds_lines_profiled=f'{results}/prism/compounds_lines_profiled.csv'
@@ -26,7 +15,7 @@ checkpoint prism_annotate_models:
 
 rule prism_compounds_diffexpr:
     input:
-        raw_gene_counts  = rules.prism_get_rnaseq_counts.output.raw_gene_counts,
+        raw_gene_counts  = rules.get_rnaseq_counts.output.raw_gene_counts,
         compound_to_test = f'{results}/prism/auc_models_candidates/{{broad_id}}.csv'
     output:
         ebayes= f'{results}/prism/ebayes/{{broad_id}}_eBayes.rds'
