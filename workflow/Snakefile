@@ -2,7 +2,7 @@ import pandas as pd
 
 configfile: "config/config.yaml"
 
-datasets = pd.read_csv('datasets.csv', sep=',', index_col=0)
+datasets = pd.read_csv('config/datasets.csv', sep=',', index_col=0)
 results  = config['results_directory']
 
 
@@ -18,6 +18,17 @@ def get_prism_genesets_fold(wildcards):
     return expand(f'{results}/prism/genesets/fold/{{broad_id}}',
            broad_id=glob_wildcards(os.path.join(checkpoint_output, "{brd_id}.csv")).brd_id)
 
+def get_ctrp_genesets_classic(wildcards):
+    checkpoint_output = checkpoints.ctrp_annotate_models.get(**wildcards).output['auc_models_candidates']
+
+    return expand(f'{results}/ctrp/genesets/classic/{{broad_id}}',
+           broad_id=glob_wildcards(os.path.join(checkpoint_output, "{brd_id}.csv")).brd_id)
+
+def get_ctrp_genesets_fold(wildcards):
+    checkpoint_output = checkpoints.ctrp_annotate_models.get(**wildcards).output['auc_models_candidates']
+
+    return expand(f'{results}/ctrp/genesets/fold/{{broad_id}}',
+           broad_id=glob_wildcards(os.path.join(checkpoint_output, "{brd_id}.csv")).brd_id)
 
 def get_gdsc_ebayes(wildcards):
     checkpoint_output = checkpoints.gdsc_generate_compound_curves.get(**wildcards).output['auc_models_candidates']
@@ -36,17 +47,12 @@ def get_depmap_genesets(wildcards):
 
 rule all:
     input:
-        get_prism_genesets_classic,
-        get_prism_genesets_fold
-      # get_depmap_genesets
-
-
-
+        get_ctrp_genesets_fold
 
 
 ## Load rules ##
 include: 'rules/common.smk'
 include: 'rules/gdsc_arrays_signatures.smk'
 include: 'rules/prism_signatures.smk'
+include: 'rules/ctrp_signatures.smk'
 include: 'rules/dependency_signatures.smk'
-
