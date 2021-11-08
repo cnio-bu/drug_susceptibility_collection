@@ -1,5 +1,6 @@
 .snakemake/*
+workflow/.snakemake/*
 .vscode
-logs/*
+log/*
 datasets.csv
 config.yaml
