@@ -13,7 +13,7 @@ rule annotate_cell_lines:
         '../scripts/common_annotate_lines.py'
 
 
-rule prism_get_rnaseq_counts:
+rule get_rnaseq_counts:
     input:
         raw_expected_counts=datasets.loc['raw_ccle_reads', 'directory']
     output:
