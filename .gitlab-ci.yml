@@ -1,0 +1,22 @@
+---
+# Mega-Linter GitLab CI job configuration file
+# More info at https://nvuillam.github.io/mega-linter
+mega-linter:
+  stage: test
+  # You can override Mega-Linter flavor used to have faster performances
+  # More info at https://nvuillam.github.io/mega-linter/flavors/
+  image: nvuillam/mega-linter-python:v4
+  script: ["true"]
+  variables:
+    # All available variables are described in documentation
+    # https://nvuillam.github.io/mega-linter/configuration/
+    DEFAULT_WORKSPACE: $CI_PROJECT_DIR
+    DEFAULT_BRANCH: master
+    ENABLE_LINTERS: PYTHON_BLACK,PYTHON_ISORT,SNAKEMAKE_SNAKEFMT,
+      SNAKEMAKE_LINT,YAML_PRETTIER,YAML_YAMLLINT
+    FORMATTERS_DISABLE_ERRORS: "false"
+  artifacts:
+    when: always
+    paths:
+      - report
+    expire_in: 1 week
