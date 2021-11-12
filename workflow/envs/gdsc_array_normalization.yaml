@@ -1,3 +1,4 @@
+---
 name: gdsc_array_normalization
 channels:
   - conda-forge

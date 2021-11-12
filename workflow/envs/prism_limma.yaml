@@ -1,3 +1,4 @@
+---
 name: prism_limma
 channels:
   - conda-forge
@@ -7,4 +8,3 @@ channels:
 dependencies:
   - bioconductor-limma
   - bioconductor-edger
-

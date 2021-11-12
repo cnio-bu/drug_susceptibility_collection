@@ -1,3 +1,4 @@
+---
 name: generate_genesets
 channels:
   - conda-forge
@@ -8,5 +9,3 @@ dependencies:
   - bioconductor-limma
   - bioconductor-gseabase
   - r-tidyverse
-
-

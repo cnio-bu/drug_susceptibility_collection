@@ -1,3 +1,4 @@
+---
 name: common_file_manipulation
 channels:
   - conda-forge
@@ -7,5 +8,3 @@ channels:
 dependencies:
   - r-tidyverse
   - pandas
-
-

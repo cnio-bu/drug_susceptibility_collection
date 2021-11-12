@@ -1,3 +1,4 @@
+---
 name: gdsc_generate_model_curves
 channels:
   - conda-forge
