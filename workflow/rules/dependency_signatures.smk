@@ -19,7 +19,7 @@ checkpoint dependencies_annotate_crispr_data:
 
 rule dependencies_generate_ebayes:
     input:
-        raw_gene_counts=get_rnaseq_counts.output.raw_gene_counts,
+        raw_gene_counts=rules.get_rnaseq_counts.output.raw_gene_counts,
         dependency_to_test=f"{results}/dependencies/model_candidates/{{gene}}.csv",
     output:
         ebayes=f"{results}/dependencies/ebayes/{{gene}}_eBayes.rds",
