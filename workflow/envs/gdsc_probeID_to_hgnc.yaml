@@ -1,12 +1,11 @@
 ---
-name: generate_genesets
+name: gdsc_probeID_to_hgnc
 channels:
   - conda-forge
   - bioconda
   - r
   - defaults
 dependencies:
-  - bioconductor-limma
-  - bioconductor-gseabase
+  - bioconductor-hgu219.db
+  - bioconductor-biomart
   - r-tidyverse
-  - r-openxlsx

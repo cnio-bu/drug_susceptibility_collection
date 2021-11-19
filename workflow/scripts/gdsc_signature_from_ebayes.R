@@ -1,124 +1,97 @@
-library('biomart')
-library('GSEABase')
-library('limma')
-library('tidyverse')
+log <- file(snakemake@log[[1]], open = "wt")
+sink(log)
+sink(log, type = "message")
 
-## SNAKEMAKE I/O  ##
-eBayes_model       <- snakemake@input[['fitted_bayes']]
-drug_info          <- snakemake@input[['dose_response_curves']]
+suppressMessages(library("limma"))
+suppressMessages(library("openxlsx"))
+suppressMessages(library("tidyverse"))
+suppressMessages(library("GSEABase"))
 
-geneset_directory <- snakemake@output[['bidirectional_geneset']]
+## SNAKEMAKE I/O ##
+eBayes_model <- snakemake@input[["fitted_bayes"]]
+drug_info <- snakemake@input[["treatment_info"]]
+hgnc <- snakemake@input[["hgnc"]]
 
-compound_id       <- snakemake@wildcards[['drug_id']]
+geneset_directory <- snakemake@output[["bidirectional_geneset"]]
 
-## Load annot.
-ensembl_grch37 <- useMart(biomart="ENSEMBL_MART_ENSEMBL",
-                          host="grch37.ensembl.org",
-                          dataset="hsapiens_gene_ensembl")
+## SNAKEMAKE PARAMS ##
+signature_type <- tolower(as.character(snakemake@params[['signature_type']]))
 
-human_grch38  <- useMart("ensembl", dataset="hsapiens_gene_ensembl")
-
-## Function definitions ##
-
-map_grch37_to_38 <- function(x){
-    
-    genesV2 = getLDS(attributes = c("ENSEMBL"),
-                     filters = "ENSEMBL", values = x ,
-                     mart = ensembl_grch37,
-                     attributesL = c("ENSEMBL"),
-                     martL = human_grch38, uniqueRows=FALSE)
-    
-    humanx <- unique(genesV2[])
-    
-    return(humanx)
+## FUNCTION ##
+create.gmt <- function(x, mode) {
+  gset <- GeneSet(x, geneIdType = SymbolIdentifier())
+  setName(gset) <- paste(sig_name, mode, sep = "_")
+  collapsed_name <- str_replace_all(sig_name, pattern = " ", repl = "")
+  toGmt(gset, con = paste0(geneset_directory, '/', collapsed_name, "_", mode, 
+                           ".gmt"))
 }
 
-annotateResults <- function(dataset){
-    
-    mouse_ensembl <- rownames(dataset)
-    dataset       <- as.data.frame(dataset)
-    
-    dataset$mouse_ensembl <- mouse_ensembl
-    
-    dataset$mouse_symbol <- mapIds(org.Mm.eg.db,
-                                   keys=rownames(dataset),
-                                   column="SYMBOL",
-                                   keytype="ENSEMBL",
-                                   multiVals="first")
-    
-    mouse_symbol <- unique(dataset$mouse_symbol)
-    human_genes <- convertMouseGeneList(mouse_symbol)
-    
-    dataset <- merge(x= dataset, y = human_genes, by.x = 'mouse_symbol', by.y = 'MGI.symbol', all.x = TRUE)
-    names(dataset)[names(dataset) == "HGNC.symbol"] <- "human_symbol"
-    
-    return(dataset)
-}
+## CODE ##
+# Create output directory
+dir.create(geneset_directory, showWarnings = FALSE)
 
-generate_bidirectional_signature <- function(sig_name, deg_genes){
-    
-    ## Split the table between S_genes (negative logfold) 
-    ## and R genes (positive)
-    sensitivity_genes <- deg_genes[deg_genes$logFC <= -1, 'ID']
-    resistance_genes  <- deg_genes[deg_genes$logFC >= 1,  'ID']
-    
-    if(length(sensitivity_genes) >= 15){
-        
-       candidate_genes <- extract_top_genes(deg_genes, 'sensitivity')
-       sensitivity_gset <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
-       setName(sensitivity_gset) <- paste(sig_name, 'UP', sep='_')
-       
-        GSEABase::toGmt(sensitivity_gset, con = paste(geneset_directory, '/', sig_name, '_UP', '.gmt', sep=''))
-    }
-    if(length(resistance_genes) >= 15){
-        candidate_genes <- extract_top_genes(deg_genes, 'resistance')
-        resistance_set <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
-        setName(resistance_set) <- paste(sig_name, 'DN', sep='_')
-        
-        GSEABase::toGmt(resistance_set, con = paste(geneset_directory, '/', sig_name, '_DN', '.gmt', sep='')) 
-    }
-}
-
-extract_top_genes <- function(deg_genes, mode='sensitivity'){
-    
-    if(mode=='sensitivity'){
-        deg_genes <- deg_genes[deg_genes$logFC <= -1,]
-        deg_genes <- head(deg_genes[order(deg_genes$logFC), 'ID'], n=500)
-    }else{
-        deg_genes <- deg_genes[deg_genes$logFC >= 1,]
-        deg_genes <- head(deg_genes[order(-deg_genes$logFC), 'ID'], n=500)
-    }
-    
-    return(deg_genes)
-}
-
-drug_info <-  readxl::read_xlsx(drug_info) %>%
-                    as.data.frame()
-
-drug_info <- drug_info[!duplicated(drug_info$DRUG_ID),]
-
+# Get Bayes result
 bayes_results <- readRDS(eBayes_model)
 
-all_genes <- topTable(bayes_results, coef = 'auc', 
-                     number = Inf, adjust.method = 'fdr',
-                     p.value=0.05)
+# Get treatment annotation
+drug_info <- read.xlsx(drug_info)
+drug_info <- drug_info %>% dplyr::select(DRUG_ID, DRUG_NAME) %>% unique
 
-if(!dir.exists(file.path(geneset_directory))){
-    dir.create(geneset_directory)}
+# Get signature name
+sigID <- gsub("_eBayes.rds", "", basename(eBayes_model))
+common_name <- drug_info$DRUG_NAME[match(sigID, drug_info$DRUG_ID, 
+                                         nomatch = sigID)]
+sig_name <- paste(common_name, "GDSC", sigID, sep = "_")
 
+# Get probe ID and HUGO symbol correspondence
+hgnc <- read.table(hgnc, sep = "\t", header = TRUE)
 
-if(nrow(all_genes) >= 15){
+# Variables depending on signature_type
+if (signature_type == "classic") {
+  p.val = 1
+  magnitude <- "t"
+} else if (signature_type == "fold") {
+  p.val = 0.05
+  magnitude <- "logFC"
+}
 
-    #TADO: annotate probes here
+# Get top genes table
+top_genes <- topTable(bayes_results, coef = "AUC", number = Inf, 
+                      adjust.method = "fdr", p.value = p.val)
 
-    common_name <- drug_info[drug_info$DRUG_ID == compound_id, 'DRUG_NAME']
-        
-    if(length(common_name) == 0){
-        common_name <- compound_id}
-
-    brd_split   <- strsplit(x=compound_id, split='-', fixed=TRUE)[[1]][2]
-    
-    sig_name <- paste(sep='_', common_name,'GDSC',brd_split)
-
-    generate_bidirectional_signature(sig_name, all_genes)
+# Continue if the table is not empty
+if (nrow(top_genes) != 0) {
+  # Make the rownames a new column
+  top_genes$probe <- rownames(top_genes)
+  
+  # Match with HUGO symbols
+  top_genes <- na.omit(merge(top_genes, hgnc[, c("probe", "hgnc")], all.x = TRUE))
+  
+  # If there are several values for the same gene, keep the one with the highest 
+  # absolute value of "magnitude"
+  top_genes <- top_genes %>% group_by(hgnc) %>% 
+    dplyr::slice(which.max(get(magnitude)))
+  
+  # Create bidirectional signature
+  if (signature_type == "classic") {
+    sensitivity <- top_genes %>% filter(t < 0)
+    resistance <- top_genes %>% filter(t > 0)
+  } else if (signature_type == "fold") {
+    sensitivity <- top_genes %>% filter(logFC <= -1)
+    resistance <- top_genes %>% filter(logFC >= 1)
+  }
+  
+  # Keep the 250 top/bottom genes
+  sensitivity <- head(sensitivity, n = 250) %>% arrange(desc(get(magnitude))) %>% 
+    dplyr::select(hgnc) %>% pull
+  resistance <- tail(resistance, n = 250) %>% arrange(get(magnitude)) %>%
+    dplyr::select(hgnc) %>% pull
+  
+  # Create a gmt if the number of genes > 15
+  if (length(sensitivity) >= 15) {
+    create.gmt(sensitivity, "UP")
+  }
+  if (length(resistance) >= 15) {
+    create.gmt(resistance, "DN")
+  }
 }

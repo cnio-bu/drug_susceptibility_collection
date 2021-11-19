@@ -1,6 +1,9 @@
 rule gdsc_download_cel_files:
     input:
-        "",
+        HTTP.remote(
+            "https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-3610/E-MTAB-3610.sdrf.txt",
+            keep_local=True,
+        ),
     output:
         raw_cel_files=directory(f"{results}/gdsc/array_data/raw"),
         array_metadata=f"{results}/gdsc/array_data/raw/E-MTAB-3610.sdrf.txt",
@@ -59,3 +62,51 @@ rule gdsc_compounds_diffexp:
         "../envs/prism_limma.yaml"
     script:
         "../scripts/gdsc_generate_ebayes_model.R"
+
+
+rule gdsc_probeID_to_hgnc:
+    input:
+        cel_files=ancient(rules.gdsc_download_cel_files.output.raw_cel_files),
+    output:
+        tsv=f"resources/probeID_to_hgnc.tsv",
+    log:
+        f"{LOGDIR}/gdsc/probeID_to_hgnc.log",
+    conda:
+        "../envs/gdsc_probeID_to_hgnc.yaml"
+    script:
+        "../scripts/probeID_hgnc_table.R"
+
+
+##TODO: These two rules could benefit from rule inheritance
+rule gdsc_geneset_from_ebayes_classic:
+    input:
+        fitted_bayes=rules.gdsc_compounds_diffexp.output.ebayes,
+        treatment_info=datasets.loc["gdsc_response_curves", "directory"],
+        hgnc=rules.gdsc_probeID_to_hgnc.output.tsv,
+    output:
+        bidirectional_geneset=directory(f"{results}/gdsc/genesets/classic/{{drug_id}}"),
+    params:
+        signature_type="classic",
+    log:
+        f"{LOGDIR}/gdsc/genesets/classic/{{drug_id}}.log",
+    conda:
+        "../envs/generate_genesets.yaml"
+    script:
+        "../scripts/gdsc_signature_from_ebayes.R"
+
+
+rule gdsc_geneset_from_ebayes_fold:
+    input:
+        fitted_bayes=rules.gdsc_compounds_diffexp.output.ebayes,
+        treatment_info=datasets.loc["gdsc_response_curves", "directory"],
+        hgnc=rules.gdsc_probeID_to_hgnc.output.tsv,
+    output:
+        bidirectional_geneset=directory(f"{results}/gdsc/genesets/fold/{{drug_id}}"),
+    params:
+        signature_type="fold",
+    log:
+        f"{LOGDIR}/gdsc/genesets/fold/{{drug_id}}.log",
+    conda:
+        "../envs/generate_genesets.yaml"
+    script:
+        "../scripts/gdsc_signature_from_ebayes.R"
