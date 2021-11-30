@@ -1,4 +1,7 @@
 import pandas as pd
+from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
+
+HTTP = HTTPRemoteProvider()
 
 
 configfile: "config/config.yaml"
@@ -53,13 +56,26 @@ def get_ctrp_genesets_fold(wildcards):
     )
 
 
-def get_gdsc_ebayes(wildcards):
+def get_gdsc_genesets_classic(wildcards):
     checkpoint_output = checkpoints.gdsc_generate_compound_curves.get(
         **wildcards
     ).output["auc_models_candidates"]
 
     return expand(
-        f"{results}/gdsc/ebayes/{{drug_id}}_eBayes.rds",
+        f"{results}/gdsc/genesets/classic/{{drug_id}}",
+        drug_id=glob_wildcards(
+            os.path.join(checkpoint_output, "{drug_id}.csv")
+        ).drug_id,
+    )
+
+
+def get_gdsc_genesets_fold(wildcards):
+    checkpoint_output = checkpoints.gdsc_generate_compound_curves.get(
+        **wildcards
+    ).output["auc_models_candidates"]
+
+    return expand(
+        f"{results}/gdsc/genesets/fold/{{drug_id}}",
         drug_id=glob_wildcards(
             os.path.join(checkpoint_output, "{drug_id}.csv")
         ).drug_id,
@@ -79,7 +95,7 @@ def get_depmap_genesets(wildcards):
 
 rule all:
     input:
-        get_ctrp_genesets_fold,
+        get_gdsc_genesets_fold,
 
 
 ## Load rules ##
