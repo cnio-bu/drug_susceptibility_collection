@@ -1,5 +1,5 @@
 dataset,directory
-raw_ccle_reads
+raw_ccle_reads,
 celligner_data,
 ccle_sample_info,
 prism_response_curves,
