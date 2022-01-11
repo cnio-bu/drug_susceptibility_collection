@@ -7,10 +7,10 @@ checkpoint dependencies_annotate_crispr_data:
         raw_expected_counts=datasets.loc["raw_ccle_reads", "directory"],
     output:
         model_candidates=directory(f"{results}/dependencies/model_candidates"),
-    threads: 1
+    threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=4096,
-        walltime=10,
+        mem=get_resource("annotate_cell_lines", "mem"),
+        walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
     script:
@@ -23,10 +23,12 @@ rule dependencies_generate_ebayes:
         dependency_to_test=f"{results}/dependencies/model_candidates/{{gene}}.csv",
     output:
         ebayes=f"{results}/dependencies/ebayes/{{gene}}_eBayes.rds",
-    threads: 1
+    log:
+        f"{LOGDIR}/dependencies_ebayes/{{gene}}.log",
+    threads: get_resource("default", "threads"),
     resources:
-        mem=8192,
-        walltime=10,
+        mem=get_resource("default", "mem"),
+        walltime=get_resource("default", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
     script:
@@ -38,6 +40,12 @@ rule dependencies_geneset_from_ebayes:
         fitted_bayes=rules.dependencies_generate_ebayes.output.ebayes,
     output:
         bidirectional_geneset=directory(f"{results}/dependencies/genesets/{{gene}}"),
+    log:
+        f"{LOGDIR}/dependencies_geneset/{{gene}}.log",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem=get_resource("ctrp_generate_geneset", "mem"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
     script:

@@ -4,9 +4,10 @@ rule annotate_cell_lines:
         celligner_lines_data=datasets.loc["celligner_data", "directory"],
     output:
         cell_lines_annotation=f"{results}/annotation/cell_line_annotation.csv",
-    threads: 1
+    threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem_mb=4096,
+        mem=get_resource("annotate_cell_lines", "mem"),
+        walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
     script:
@@ -18,6 +19,10 @@ rule get_rnaseq_counts:
         raw_expected_counts=datasets.loc["raw_ccle_reads", "directory"],
     output:
         raw_gene_counts=f"{results}/prism/raw_ccle_counts.rds",
+    threads: get_resource("default", "threads"),
+    resources:
+        mem=get_resource("default", "mem"),
+        walltime=get_resource("default", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
     script:

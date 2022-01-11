@@ -7,6 +7,10 @@ checkpoint prism_annotate_models:
     output:
         auc_models_candidates=directory(f"{results}/prism/auc_models_candidates"),
         compounds_lines_profiled=f"{results}/prism/compounds_lines_profiled.csv",
+    threads: get_resource("ctrp_annotate_models", "threads"),
+    resources:
+        mem=get_resource("ctrp_annotate_models", "mem"),
+        walltime=get_resource("ctrp_annotate_models", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
     script:
@@ -21,6 +25,10 @@ rule prism_compounds_diffexpr:
         ebayes=f"{results}/prism/ebayes/{{broad_id}}_eBayes.rds",
     log:
         f"{LOGDIR}/prism_compounds_diffexpr/{{broad_id}}.log",
+    threads: get_resource("gdsc_compounds_diffexp", "threads"),
+    resources:
+        mem=get_resource("gdsc_compounds_diffexp", "mem"),
+        walltime=get_resource("gdsc_compounds_diffexp", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
     script:
@@ -40,6 +48,10 @@ rule prism_geneset_from_ebayes_classic:
         f"{LOGDIR}/prism_geneset_from_ebayes/{{broad_id}}_classic.log",
     params:
         signature_type="classic",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem=get_resource("ctrp_generate_geneset", "mem"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
     script:
@@ -56,6 +68,10 @@ rule prism_geneset_from_ebayes_fold:
         f"{LOGDIR}/prism_geneset_from_ebayes/{{broad_id}}_fold.log",
     params:
         signature_type="fold",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem=get_resource("ctrp_generate_geneset", "mem"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
     script:

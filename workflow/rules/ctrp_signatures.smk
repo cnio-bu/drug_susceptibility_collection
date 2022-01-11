@@ -11,9 +11,10 @@ checkpoint ctrp_annotate_models:
         compounds_lines_profiled=f"{results}/ctrp/compounds_lines_profiled.csv",
     log:
         "logs/ctrp_annotate_models.log",
-    threads: 1
+    threads: get_resource("ctrp_annotate_models", "threads"),
     resources:
-        mem_mb=4096,
+        mem=get_resource("ctrp_annotate_models", "mem"),
+        walltime=get_resource("ctrp_annotate_models", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
     script:
@@ -26,6 +27,10 @@ rule ctrp_generate_ebayes:
         compound_to_test=f"{results}/ctrp/auc_models_candidates/{{broad_id}}.csv",
     output:
         ebayes=f"{results}/ctrp/ebayes/{{broad_id}}_eBayes.rds",
+    threads: get_resource("ctrp_generate_ebayes", "threads")
+    resources:
+        mem=get_resource("ctrp_generate_ebayes", "mem"),
+        walltime=get_resource("ctrp_generate_ebayes", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
     script:
@@ -41,6 +46,10 @@ rule ctrp_geneset_from_ebayes_classic:
         bidirectional_geneset=directory(f"{results}/ctrp/genesets/classic/{{broad_id}}"),
     params:
         signature_type="classic",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem=get_resource("ctrp_generate_geneset", "mem"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
     script:
@@ -55,6 +64,10 @@ rule ctrp_geneset_from_ebayes_fold:
         bidirectional_geneset=directory(f"{results}/ctrp/genesets/fold/{{broad_id}}"),
     params:
         signature_type="fold",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem=get_resource("ctrp_generate_geneset", "mem"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
     script:
