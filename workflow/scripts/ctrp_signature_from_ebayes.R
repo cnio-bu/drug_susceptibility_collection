@@ -104,9 +104,12 @@ if(nrow(all_genes) >= 15){
 
     brd_split   <- strsplit(x=compound_id, split='-', fixed=TRUE)[[1]][2]
     
-    sig_name <- paste(sep='_', common_name,'CTRP',brd_split)
+    # This code deals with combinations of drugs, to keep names short
+    if(grepl(pattern = "mol/mol", x = common_name, fixed = TRUE)){
+     common_name <- strsplit(x = common_name, split = " ")[[1]][1]}
+
+    sig_name <- paste(sep='_', common_name,'CTRP', brd_split)
 
     generate_bidirectional_signature(sig_name, all_genes)
 
 }
-
