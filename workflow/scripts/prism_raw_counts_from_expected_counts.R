@@ -46,7 +46,7 @@ ccle_counts           <- as.matrix(ccle_counts)
 # Get rid of remaining spikes
 is_spikes <- grepl(pattern = "ERCC-", x = rownames(ccle_counts), fixed = TRUE)
 
-ccle_counts <- ccle_counts[!is_spike, ]
+ccle_counts <- ccle_counts[!is_spikes, ]
 
 saveRDS(object=ccle_counts, file=raw_gene_counts)
 
