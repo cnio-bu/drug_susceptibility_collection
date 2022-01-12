@@ -27,3 +27,24 @@ rule get_rnaseq_counts:
         "../envs/common_file_manipulation.yaml"
     script:
         "../scripts/prism_raw_counts_from_expected_counts.R"
+
+
+rule build_drug_database:
+    input:
+        ctrp_db = rules.ctrp_build_db.output.csv_db,
+        gdsc_db = rules.gdsc_build_db.output.csv_db,
+        prism_db = rules.prism_build_db.output.csv_db,
+        cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
+    output:
+        full_database=f"{results}/drug_database.csv",
+        full_database_rd=f"{results}/drug_database.rdata",
+        drug_summary=f"{results}/drug_summary.csv",
+        drug_summary_rd=f"{results}/drug_summary.rdata",
+    threads: get_resource("default", "threads"),
+    resources:
+        mem=get_resource("default", "mem"),
+        walltime=get_resource("default", "walltime"),
+    conda:
+        "../envs/common_file_manipulation.yaml"
+    script:
+        "../scripts/prism_raw_counts_from_expected_counts.R"
