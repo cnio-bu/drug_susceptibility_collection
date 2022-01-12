@@ -1,3 +1,5 @@
+import glob
+
 rule gdsc_download_cel_files:
     input:
         HTTP.remote(
@@ -90,7 +92,7 @@ rule gdsc_probeID_to_hgnc:
 rule gdsc_build_db:
     input:
         compound_data=glob.glob(f"{results}/gdsc/auc_models_candidates/*.csv"),
-        lines_compounds=rules.gdsc_annotate_models.output.compounds_lines_profiled,
+        lines_compounds=rules.gdsc_generate_compound_curves.output.compounds_lines_profiled,
         cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
     output:
         csv_db=f"{results}/gdsc/drug_data.csv",

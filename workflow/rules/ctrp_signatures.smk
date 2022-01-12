@@ -1,3 +1,5 @@
+import glob
+
 checkpoint ctrp_annotate_models:
     input:
         curves_data=datasets.loc["ctrp_response_curves", "directory"],
@@ -40,7 +42,7 @@ rule ctrp_generate_ebayes:
 rule ctrp_build_db:
     input:
         compound_data=glob.glob(f"{results}/ctrp/auc_models_candidates/*.csv"),
-        lines_compounds=rules.ctrp.output.compounds_lines_profiled,
+        lines_compounds=rules.ctrp_annotate_models.output.compounds_lines_profiled,
         compound_meta=datasets.loc["ctrp_compound_meta", "directory"],
     output:
         csv_db=f"{results}/ctrp/drug_data.csv",
