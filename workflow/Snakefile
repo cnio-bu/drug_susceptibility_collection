@@ -102,7 +102,9 @@ def get_depmap_genesets(wildcards):
 
 rule all:
     input:
-        get_depmap_genesets,
+        get_prism_genesets_classic,
+        get_gdsc_genesets_classic,
+        get_prism_genesets_classic
 
 
 ## Load rules ##
@@ -111,3 +113,4 @@ include: "rules/gdsc_arrays_signatures.smk"
 include: "rules/prism_signatures.smk"
 include: "rules/ctrp_signatures.smk"
 include: "rules/dependency_signatures.smk"
+include: "rules/database.smk"

@@ -89,26 +89,6 @@ rule gdsc_probeID_to_hgnc:
         "../scripts/probeID_hgnc_table.R"
 
 
-rule gdsc_build_db:
-    input:
-        compound_data=glob.glob(f"{results}/gdsc/auc_models_candidates/*.csv"),
-        lines_compounds=rules.gdsc_generate_compound_curves.output.compounds_lines_profiled,
-        cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
-    output:
-        csv_db=f"{results}/gdsc/drug_data.csv",
-        rdata_db=f"{results}/gdsc/drug_data.rdata",
-    log:
-        f"{LOGDIR}/gdsc_build_db/log.txt",
-    threads: get_resource("annotate_cell_lines", "threads"),
-    resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
-        walltime=get_resource("annotate_cell_lines", "walltime"),
-    conda:
-        "../envs/common_file_manipulation.yaml"
-    script:
-        "../scripts/gdsc_generate_drug_db.R"
-
-
 ##TODO: These two rules could benefit from rule inheritance
 rule gdsc_geneset_from_ebayes_classic:
     input:
