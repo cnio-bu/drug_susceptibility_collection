@@ -2,7 +2,7 @@ library("tidyverse")
 
 ### SNAKEMAKE I/O ###
 compound_data        <- snakemake@input[['compound_data']]
-lines_compounds      <- snakemake@input[['compound_lines']]
+lines_compounds      <- snakemake@input[['lines_compounds']]
 
 comma_file <- snakemake@output[['csv_db']]
 rdata      <- snakemake@output[['rdata_db']]

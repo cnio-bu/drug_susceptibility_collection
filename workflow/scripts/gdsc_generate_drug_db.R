@@ -3,8 +3,8 @@ library("tidyverse")
 
 ### SNAKEMAKE I/O ###
 compound_data        <- snakemake@input[['compound_data']]
-cell_line_annotation  <- snakemake@input[['cell_line_annotation']]
-lines_compounds      <- snakemake@input[['compound_lines']]
+cell_line_annotation <- snakemake@input[['cell_line_annotation']]
+lines_compounds      <- snakemake@input[['lines_compounds']]
 
 comma_file <- snakemake@output[['csv_db']]
 rdata      <- snakemake@output[['rdata_db']]
@@ -38,7 +38,7 @@ filtered_data <- full_table %>%
            target = PUTATIVE_TARGET)
 
 ## Attempt to get DepMap IDs using SANGER passport
-cell_line_annotation <- read_csv(file = "../../annotation/cell_line_annotation.csv") %>%
+cell_line_annotation <- read_csv(cell_line_annotation) %>%
     select(Sanger_Model_ID, DepMap_ID) %>%
     rename(cell_id = Sanger_Model_ID,
            depmap_id = DepMap_ID) %>%

@@ -4,7 +4,7 @@ library("tidyverse")
 ### SNAKEMAKE I/O ###
 compound_data        <- snakemake@input[['compound_data']]
 compound_meta        <- snakemake@input[['compound_meta']]
-lines_compounds      <- snakemake@input[['compound_lines']]
+lines_compounds      <- snakemake@input[['lines_compounds']]
 
 comma_file <- snakemake@output[['csv_db']]
 rdata      <- snakemake@output[['rdata_db']]
@@ -36,11 +36,15 @@ filtered_data <- full_table %>%
 ## We need to annotate the moa for CRTP
 compound_meta <- read_tsv(compound_meta) %>%
     select(master_cpd_id,
+           cpd_name,
            gene_symbol_of_protein_target,
            target_or_activity_of_compound
            ) %>%
-    rename(target = gene_symbol_of_protein_target,
-           moa = target_or_activity_of_compound)
+    rename(
+        name = cpd_name,
+        target = gene_symbol_of_protein_target,
+        moa = target_or_activity_of_compound
+        )
 
 filtered_annotated_data <- filtered_data %>%
     left_join(compound_meta, by = "master_cpd_id") %>%
