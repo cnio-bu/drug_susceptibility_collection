@@ -1,3 +1,5 @@
+import glob
+
 ## TODO: This rule can be split in 2
 checkpoint prism_annotate_models:
     input:
@@ -33,6 +35,25 @@ rule prism_compounds_diffexpr:
         "../envs/prism_limma.yaml"
     script:
         "../scripts/prism_generate_ebayes_model.R"
+
+
+rule prism_build_db:
+    input:
+        compound_data=glob.glob(f"{results}/prism/auc_models_candidates/*.csv"),
+        lines_compounds=rules.prism_annotate_models.output.compounds_lines_profiled,
+    output:
+        csv_db=f"{results}/prism/drug_data.csv",
+        rdata_db=f"{results}/prism/drug_data.rdata",
+    log:
+        f"{LOGDIR}/prism_build_db/log.txt",
+    threads: get_resource("annotate_cell_lines", "threads"),
+    resources:
+        mem=get_resource("annotate_cell_lines", "mem"),
+        walltime=get_resource("annotate_cell_lines", "walltime"),
+    conda:
+        "../envs/common_file_manipulation.yaml"
+    script:
+        "../scripts/prism_generate_drug_db.R"
 
 
 ##TODO: These two rules could benefit from rule inheritance

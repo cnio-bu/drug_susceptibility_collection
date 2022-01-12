@@ -37,6 +37,26 @@ rule ctrp_generate_ebayes:
         "../scripts/ctrp_generate_ebayes_model.R"
 
 
+rule ctrp_build_db:
+    input:
+        compound_data=glob.glob(f"{results}/ctrp/auc_models_candidates/*.csv"),
+        lines_compounds=rules.ctrp.output.compounds_lines_profiled,
+        compound_meta=datasets.loc["ctrp_compound_meta", "directory"],
+    output:
+        csv_db=f"{results}/ctrp/drug_data.csv",
+        rdata_db=f"{results}/ctrp/drug_data.rdata",
+    log:
+        f"{LOGDIR}/ctrp_build_db/log.txt",
+    threads: get_resource("annotate_cell_lines", "threads"),
+    resources:
+        mem=get_resource("annotate_cell_lines", "mem"),
+        walltime=get_resource("annotate_cell_lines", "walltime"),
+    conda:
+        "../envs/common_file_manipulation.yaml"
+    script:
+        "../scripts/ctrp_generate_drug_db.R"
+
+
 ##TODO: These two rules could benefit from rule inheritance
 rule ctrp_geneset_from_ebayes_classic:
     input:
