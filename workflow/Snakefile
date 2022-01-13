@@ -103,7 +103,7 @@ def get_depmap_genesets(wildcards):
 # Awful, lazy rule
 rule all:
     input:
-        get_prism_genesets_classic,
+        get_ctrp_genesets_classic,
         get_gdsc_genesets_classic,
         get_prism_genesets_classic,
         f"{results}/drug_database.rdata",
