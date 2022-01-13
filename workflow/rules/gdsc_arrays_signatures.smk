@@ -99,10 +99,10 @@ rule gdsc_geneset_from_ebayes_classic:
         bidirectional_geneset=directory(f"{results}/gdsc/genesets/classic/{{drug_id}}"),
     params:
         signature_type="classic",
-    threads: get_resource("ctrp_generate_geneset", "threads"),
+    threads: get_resource("gdsc_generate_geneset", "threads"),
     resources:
-        mem=get_resource("ctrp_generate_geneset", "mem"),
-        walltime=get_resource("ctrp_generate_geneset", "walltime"),
+        mem=get_resource("gdsc_generate_geneset", "mem"),
+        walltime=get_resource("gdsc_generate_geneset", "walltime"),
     log:
         f"{LOGDIR}/gdsc/genesets/classic/{{drug_id}}.log",
     conda:
@@ -120,10 +120,10 @@ rule gdsc_geneset_from_ebayes_fold:
         bidirectional_geneset=directory(f"{results}/gdsc/genesets/fold/{{drug_id}}"),
     params:
         signature_type="fold",
-    threads: get_resource("ctrp_generate_geneset", "threads"),
+    threads: get_resource("gdsc_generate_geneset", "threads"),
     resources:
-        mem=get_resource("ctrp_generate_geneset", "mem"),
-        walltime=get_resource("ctrp_generate_geneset", "walltime"),
+        mem=get_resource("gdsc_generate_geneset", "mem"),
+        walltime=get_resource("gdsc_generate_geneset", "walltime"),
     log:
         f"{LOGDIR}/gdsc/genesets/fold/{{drug_id}}.log",
     conda:

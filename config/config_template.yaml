@@ -39,5 +39,9 @@ resources:
     threads: 1
     mem: 16000
     walltime: 10
+  gdsc_generate_geneset:
+    threads: 1
+    mem: 16000
+    walltime: 20
   
   
