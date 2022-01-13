@@ -100,11 +100,21 @@ def get_depmap_genesets(wildcards):
     )
 
 
+# Awful, lazy rule
 rule all:
     input:
         get_prism_genesets_classic,
         get_gdsc_genesets_classic,
-        get_prism_genesets_classic
+        get_prism_genesets_classic,
+        f"{results}/drug_database.rdata",
+    output:
+        f"{results}/drug_signatures_classic.gmt",
+    threads: 1
+    resources:
+        mem=4096,
+        walltime=10,
+    shell:
+        "cat {results}/ctrp/genesets/classic/*/*.gmt {results}/gdsc/genesets/classic/*/*.gmt {results}/prism/genesets/classic/*/*.gm$
 
 
 ## Load rules ##

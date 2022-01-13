@@ -82,9 +82,9 @@ if (nrow(top_genes) != 0) {
   }
   
   # Keep the 250 top/bottom genes
-  sensitivity <- head(sensitivity, n = 250) %>% arrange(desc(get(magnitude))) %>% 
+  sensitivity <- head(sensitivity, n = 500) %>% arrange(desc(get(magnitude))) %>% 
     dplyr::select(hgnc) %>% pull
-  resistance <- tail(resistance, n = 250) %>% arrange(get(magnitude)) %>%
+  resistance <- tail(resistance, n = 500) %>% arrange(get(magnitude)) %>%
     dplyr::select(hgnc) %>% pull
   
   # Create a gmt if the number of genes > 15
