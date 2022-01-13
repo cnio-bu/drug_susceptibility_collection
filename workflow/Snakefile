@@ -114,7 +114,7 @@ rule all:
         mem=4096,
         walltime=10,
     shell:
-        "cat {results}/ctrp/genesets/classic/*/*.gmt {results}/gdsc/genesets/classic/*/*.gmt {results}/prism/genesets/classic/*/*.gm$
+        "cat {results}/ctrp/genesets/classic/*/*.gmt {results}/gdsc/genesets/classic/*/*.gmt {results}/prism/genesets/classic/*/*.gmt > {output}"
 
 
 ## Load rules ##
