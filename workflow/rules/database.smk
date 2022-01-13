@@ -1,3 +1,5 @@
+import glob
+
 rule ctrp_build_db:
     input:
         compound_data=glob.glob(f"{results}/ctrp/auc_models_candidates/*.csv"),
@@ -76,3 +78,20 @@ rule build_drug_database:
         "../envs/common_file_manipulation.yaml"
     script:
         "../scripts/common_build_drug_db.R"
+
+
+rule concat_classic_genesets:
+    input:
+        ctrp_genesets = get_ctrp_genesets_classic,
+        gdsc_genesets = get_gdsc_genesets_classic
+        prism_genesets = get_prism_genesets_classic,
+    output:
+        susceptibility_gmt = f"{results}/drug_signatures_classic.gmt",
+    threads: get_resource("default", "threads"),
+    resources:
+        mem = get_resource("default", "mem"),
+        walltime = get_resource("default", "walltime"),
+    shell: "cat {input.ctrp_genesets} {input.gdsc_genesets} {input.prism_genesets} > {output.susceptibility_gmt}"
+
+
+
