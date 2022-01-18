@@ -29,6 +29,9 @@ def main():
         undifferentiated_lines
     )
 
+    # Preserve original lineage
+    lines_info["original_lineage"] = lines_info["lineage"]
+    
     # rename the lineages from the undif. lines to "undifferentiated"
     lines_info.loc[lines_info["is_undifferentiated"], "lineage"] = "undifferentiated"
 

@@ -29,13 +29,14 @@ gdsc  <- read_csv(gdsc_db) %>%
 cell_line_annotation <- read_csv(cell_line_annotation) %>%
     select(DepMap_ID,
            stripped_cell_line_name,
+           original_lineage,
            lineage,
            lineage_subtype,
            primary_or_metastasis
            ) %>%
     rename(depmap_id = DepMap_ID,
            cell_line = stripped_cell_line_name,
-           origin = lineage,
+           origin = original_lineage,
            origin_subtype = lineage_subtype,
            tumor_type = primary_or_metastasis
            )
