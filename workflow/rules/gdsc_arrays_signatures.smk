@@ -1,14 +1,8 @@
 import glob
 
 rule gdsc_download_cel_files:
-    input:
-        HTTP.remote(
-            "https://www.ebi.ac.uk/arrayexpress/files/E-MTAB-3610/E-MTAB-3610.sdrf.txt",
-            keep_local=True,
-        ),
     output:
-        raw_cel_files=directory(f"{results}/gdsc/array_data/raw"),
-        array_metadata=f"{results}/gdsc/array_data/raw/E-MTAB-3610.sdrf.txt",
+        raw_cel_files=directory(f"{results}/gdsc/array_data/raw")
     threads: 1
     resources:
         mem_mb=1024,
@@ -39,7 +33,7 @@ rule gdsc_normalize_arrays:
 checkpoint gdsc_generate_compound_curves:
     input:
         dose_response_curves=datasets.loc["gdsc_response_curves", "directory"],
-        array_metadata=rules.gdsc_download_cel_files.output.array_metadata,
+        array_metadata=f"resources/E-MTAB-3610.sdrf.txt",
         cell_lines_annotation=rules.annotate_cell_lines.output.cell_lines_annotation,
     output:
         auc_models_candidates=directory(f"{results}/gdsc/auc_models_candidates"),
@@ -74,7 +68,7 @@ rule gdsc_compounds_diffexp:
 
 rule gdsc_probeID_to_hgnc:
     input:
-        cel_files=ancient(rules.gdsc_download_cel_files.output.raw_cel_files),
+        cel_files=f"resources/E-MTAB-3610.sdrf.txt",
     output:
         tsv=f"resources/probeID_to_hgnc.tsv",
     log:

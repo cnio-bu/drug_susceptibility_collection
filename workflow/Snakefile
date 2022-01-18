@@ -1,9 +1,6 @@
 import pandas as pd
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 
-HTTP = HTTPRemoteProvider()
-
-
 configfile: "config/config.yaml"
 
 
