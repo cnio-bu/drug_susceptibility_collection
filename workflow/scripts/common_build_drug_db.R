@@ -45,6 +45,7 @@ cell_line_annotation <- read_csv(cell_line_annotation) %>%
 combined_data <- prism %>%
     bind_rows(ctrp) %>%
     bind_rows(gdsc) %>%
+    select(-lineage) %>%
     left_join(cell_line_annotation, "depmap_id") %>%
     rename(celligner_origin = lineage)
 
