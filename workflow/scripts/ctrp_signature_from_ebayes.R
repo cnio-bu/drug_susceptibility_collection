@@ -42,7 +42,7 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
         resistance_set <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
         setName(resistance_set) <- paste(sig_name, 'DN', sep='_')
         
-        GSEABase::toGmt(resistance_set, con = paste(geneset_directory, '/', sig_name, '_DN', '.gmt', sep='')) 
+        GSEABase::toGmt(resistance_set, con = paste(geneset_directory, '/', sig_name, '_DOWN', '.gmt', sep='')) 
     }
 }
 

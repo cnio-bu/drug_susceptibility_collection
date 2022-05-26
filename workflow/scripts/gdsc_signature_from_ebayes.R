@@ -92,6 +92,6 @@ if (nrow(top_genes) != 0) {
     create.gmt(sensitivity, "UP")
   }
   if (length(resistance) >= 15) {
-    create.gmt(resistance, "DN")
+    create.gmt(resistance, "DOWN")
   }
 }
