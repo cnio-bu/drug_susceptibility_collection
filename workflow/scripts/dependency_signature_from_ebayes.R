@@ -21,8 +21,8 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
     
     ## Split the table between dep_associated_genes (positive logfold) 
     ## and non.dep associated genes (negative
-    dependency_upregulated         <- deg_genes[deg_genes$logFC >= 1, 'ID']
-    dependency_downregulated       <- deg_genes[deg_genes$logFC <= -1,'ID']
+    dependency_upregulated         <- deg_genes[deg_genes$logFC >= 0.5, 'ID']
+    dependency_downregulated       <- deg_genes[deg_genes$logFC <= -0.5,'ID']
     
     if(length(dependency_upregulated) >= 15){
         
@@ -44,10 +44,10 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
 extract_top_genes <- function(deg_genes, mode='dependent_up'){
     
     if(mode=='dependent_up'){
-        deg_genes <- deg_genes[deg_genes$logFC >= 1,]
+        deg_genes <- deg_genes[deg_genes$logFC >= 0.5,]
         deg_genes <- head(deg_genes[order(deg_genes$logFC), 'ID'], n=500)
     }else{
-        deg_genes <- deg_genes[deg_genes$logFC <= -1,]
+        deg_genes <- deg_genes[deg_genes$logFC <= -0.5,]
         deg_genes <- head(deg_genes[order(-deg_genes$logFC), 'ID'], n=500)
     }
     
@@ -57,9 +57,10 @@ extract_top_genes <- function(deg_genes, mode='dependent_up'){
 
 bayes_results <- readRDS(eBayes_model)
 
-all_genes <- topTable(bayes_results, coef = 'probability', 
-                     number = Inf, adjust.method = 'fdr',
-                     p.value=0.05)
+all_genes <- topTreat(bayes_results, coef = 'probability', 
+                     number = Inf, adjust.method = 'fdr')
+
+all_genes <- all_genes[all_genes$adj.P.Val <= 0.05, ]
 
 all_genes$ID <- rownames(all_genes)
 
