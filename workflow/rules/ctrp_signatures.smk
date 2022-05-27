@@ -15,7 +15,7 @@ checkpoint ctrp_annotate_models:
         "logs/ctrp_annotate_models.log",
     threads: get_resource("ctrp_annotate_models", "threads"),
     resources:
-        mem=get_resource("ctrp_annotate_models", "mem"),
+        mem_mb=get_resource("ctrp_annotate_models", "mem_mb"),
         walltime=get_resource("ctrp_annotate_models", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -31,7 +31,7 @@ rule ctrp_generate_ebayes:
         ebayes=f"{results}/ctrp/ebayes/{{broad_id}}_eBayes.rds",
     threads: get_resource("ctrp_generate_ebayes", "threads")
     resources:
-        mem=get_resource("ctrp_generate_ebayes", "mem"),
+        mem_mb=get_resource("ctrp_generate_ebayes", "mem_mb"),
         walltime=get_resource("ctrp_generate_ebayes", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
@@ -50,7 +50,7 @@ rule ctrp_geneset_from_ebayes_classic:
         signature_type="classic",
     threads: get_resource("ctrp_generate_geneset", "threads"),
     resources:
-        mem=get_resource("ctrp_generate_geneset", "mem"),
+        mem_mb=get_resource("ctrp_generate_geneset", "mem_mb"),
         walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"
@@ -68,7 +68,7 @@ rule ctrp_geneset_from_ebayes_fold:
         signature_type="fold",
     threads: get_resource("ctrp_generate_geneset", "threads"),
     resources:
-        mem=get_resource("ctrp_generate_geneset", "mem"),
+        mem_mb=get_resource("ctrp_generate_geneset", "mem_mb"),
         walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"

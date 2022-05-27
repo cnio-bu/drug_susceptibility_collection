@@ -108,7 +108,7 @@ rule all:
         f"{results}/drug_signatures_classic.gmt",
     threads: 1
     resources:
-        mem=4096,
+        mem_mb=4096,
         walltime=10,
     shell:
         "cat {results}/ctrp/genesets/classic/*/*.gmt {results}/gdsc/genesets/classic/*/*.gmt {results}/prism/genesets/classic/*/*.gmt > {output}"

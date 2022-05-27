@@ -6,7 +6,7 @@ rule annotate_cell_lines:
         cell_lines_annotation=f"{results}/annotation/cell_line_annotation.csv",
     threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
         walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -21,7 +21,7 @@ rule get_rnaseq_counts:
         raw_gene_counts=f"{results}/prism/raw_ccle_counts.rds",
     threads: get_resource("default", "threads"),
     resources:
-        mem=get_resource("default", "mem"),
+        mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"

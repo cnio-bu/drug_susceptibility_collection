@@ -9,7 +9,7 @@ checkpoint dependencies_annotate_crispr_data:
         model_candidates=directory(f"{results}/dependencies/model_candidates"),
     threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
         walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -27,7 +27,7 @@ rule dependencies_generate_ebayes:
         f"{LOGDIR}/dependencies_ebayes/{{gene}}.log",
     threads: get_resource("default", "threads"),
     resources:
-        mem=get_resource("default", "mem"),
+        mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
@@ -44,7 +44,7 @@ rule dependencies_geneset_from_ebayes:
         f"{LOGDIR}/dependencies_geneset/{{gene}}.log",
     threads: get_resource("ctrp_generate_geneset", "threads"),
     resources:
-        mem=get_resource("ctrp_generate_geneset", "mem"),
+        mem_mb=get_resource("ctrp_generate_geneset", "mem_mb"),
         walltime=get_resource("ctrp_generate_geneset", "walltime"),
     conda:
         "../envs/generate_genesets.yaml"

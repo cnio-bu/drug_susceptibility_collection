@@ -5,7 +5,7 @@ rule gdsc_download_cel_files:
         raw_cel_files=directory(f"{results}/gdsc/array_data/raw")
     threads: 1
     resources:
-        mem_mb=1024,
+        mem_mb_mb=1024,
     conda:
         "../envs/gdsc_arrayexpress.yaml"
     script:
@@ -21,7 +21,7 @@ rule gdsc_normalize_arrays:
         f"{LOGDIR}/gdsc_normalize_arrays/log.log",
     threads: get_resource("gdsc_normalize_arrays", "threads"),
     resources:
-        mem=get_resource("gdsc_normalize_arrays", "mem"),
+        mem_mb=get_resource("gdsc_normalize_arrays", "mem_mb"),
         walltime=get_resource("gdsc_normalize_arrays", "walltime"),
     conda:
         "../envs/gdsc_array_normalization.yaml"
@@ -42,7 +42,7 @@ checkpoint gdsc_generate_compound_curves:
         f"{LOGDIR}/gdsc_generate_compound_curves/log.log",
     threads: get_resource("gdsc_generate_compound_curves", "threads"),
     resources:
-        mem_mb=get_resource("gdsc_generate_compound_curves", "mem"),
+        mem_mb_mb=get_resource("gdsc_generate_compound_curves", "mem_mb"),
         walltime=get_resource("gdsc_generate_compound_curves", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -58,7 +58,7 @@ rule gdsc_compounds_diffexp:
         ebayes=f"{results}/gdsc/ebayes/{{drug_id}}_eBayes.rds",
     threads: get_resource("gdsc_compounds_diffexp", "threads"),
     resources:
-        mem=get_resource("gdsc_compounds_diffexp", "mem"),
+        mem_mb=get_resource("gdsc_compounds_diffexp", "mem_mb"),
         walltime=get_resource("gdsc_compounds_diffexp", "walltime"),
     conda:
         "../envs/prism_limma.yaml"
@@ -75,7 +75,7 @@ rule gdsc_probeID_to_hgnc:
         f"{LOGDIR}/gdsc/probeID_to_hgnc.log",
     threads: get_resource("default", "threads"),
     resources:
-        mem=get_resource("default", "mem"),
+        mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime"),
     conda:
         "../envs/gdsc_probeID_to_hgnc.yaml"
@@ -95,7 +95,7 @@ rule gdsc_geneset_from_ebayes_classic:
         signature_type="classic",
     threads: get_resource("gdsc_generate_geneset", "threads"),
     resources:
-        mem=get_resource("gdsc_generate_geneset", "mem"),
+        mem_mb=get_resource("gdsc_generate_geneset", "mem_mb"),
         walltime=get_resource("gdsc_generate_geneset", "walltime"),
     log:
         f"{LOGDIR}/gdsc/genesets/classic/{{drug_id}}.log",
@@ -116,7 +116,7 @@ rule gdsc_geneset_from_ebayes_fold:
         signature_type="fold",
     threads: get_resource("gdsc_generate_geneset", "threads"),
     resources:
-        mem=get_resource("gdsc_generate_geneset", "mem"),
+        mem_mb=get_resource("gdsc_generate_geneset", "mem_mb"),
         walltime=get_resource("gdsc_generate_geneset", "walltime"),
     log:
         f"{LOGDIR}/gdsc/genesets/fold/{{drug_id}}.log",
