@@ -33,26 +33,21 @@ def main():
 
     del rna_seq_lines
 
+    # Drop non cancerous or unknown CCL
+    not_cancer = lines.loc[
+        lines["primary_disease"].isin(["Unknown", "Non-Cancerous"]), ].index
+
+    raw_crispr_data = raw_crispr_data[~raw_crispr_data.index.isin(not_cancer)]
+
+    # Drop lineages with too (<4) samples. TODO: automatize upstream
+    embryo_or_epidermoid = lines.loc[lines["lineage"].isin(["epidermoid_carcinoma", "embryo"]), ].index
+    raw_crispr_data = raw_crispr_data[~raw_crispr_data.index.isin(embryo_or_epidermoid)]
+    
     # Transpose for better performance. Genes are rows now
     raw_crispr_data = raw_crispr_data.T
 
     # Get rid of genes with NaN values, usually due to defective processing/contamination
     filtered_crispr_data = raw_crispr_data.dropna(axis=0)
-
-    # Drop engineered cell lines, If present
-    is_engineered = lines.loc[
-        lines["lineage"].str.contains("engineered"), "stripped_cell_line_name"
-    ]
-    filtered_crispr_data = filtered_crispr_data.loc[
-        :, ~filtered_crispr_data.columns.isin(is_engineered)
-    ]
-
-    # Drop non cancerous or unknown CCL
-    not_cancer = lines.loc[
-        lines["primary_disease"].isin(["Unknown", "Non-Cancerous"]), "stripped_cell_line_name"
-        ]
-    
-    filtered_crispr_data = filtered_crispr_data.loc[:, ~filtered_crispr_data.columns.isin(not_cancer)]
 
     # Get index as columns to avoid R calling it 'X'
     filtered_crispr_data.reset_index(drop=False, inplace=True)
