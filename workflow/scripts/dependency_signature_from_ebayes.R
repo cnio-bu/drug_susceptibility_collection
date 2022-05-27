@@ -70,7 +70,7 @@ if(!dir.exists(file.path(geneset_directory))){
 
 if(nrow(all_genes) >= 15){
 
-    sig_name <- paste(sep='_', gene_name, 'DepMap', '21Q2')
+    sig_name <- paste(sep='_', gene_name, 'DepMap', '22Q2')
     generate_bidirectional_signature(sig_name, all_genes)
 }
 
