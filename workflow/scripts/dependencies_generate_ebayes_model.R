@@ -33,7 +33,7 @@ dge <- dge[keep, keep.lib.sizes=FALSE]
 dge <- calcNormFactors(dge, method = "TMM")
 
 ## TODO: save voom model plot
-v <- voom(dge, design = design, normalize.method = "none", plot=FALSE)
+v <- voom(dge, design = design, normalize.method = "quantile", plot=FALSE)
 
 fit <- lmFit(v, design)
 fit <- treat(fit, lfc = .5)

@@ -14,7 +14,7 @@ def main():
     lines = pd.read_csv(
         lines_info,
         sep=",",
-        usecols=["DepMap_ID", "stripped_cell_line_name", "lineage"],
+        usecols=["DepMap_ID", "stripped_cell_line_name", "lineage", "primary_disease"],
         index_col=0,
     )
 
@@ -46,6 +46,13 @@ def main():
     filtered_crispr_data = filtered_crispr_data.loc[
         :, ~filtered_crispr_data.columns.isin(is_engineered)
     ]
+
+    # Drop non cancerous or unknown CCL
+    not_cancer = lines.loc[
+        lines["primary_disease"].isin(["Unknown", "Non-Cancerous"]), "stripped_cell_line_name"
+        ]
+    
+    filtered_crispr_data = filtered_crispr_data.loc[:, ~filtered_crispr_data.columns.isin(not_cancer)]
 
     # Get index as columns to avoid R calling it 'X'
     filtered_crispr_data.reset_index(drop=False, inplace=True)
