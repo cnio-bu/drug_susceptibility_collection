@@ -28,7 +28,7 @@ count_matrix  <- ccle_counts[, lines_to_test]
 rownames(met_type_to_test) <- met_type_to_test$DepMap_ID
 
 ## voom model
-design <- model.matrix(~lineage + mean, data=compound_to_test)
+design <- model.matrix(~lineage + mean, data=met_type_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[ ,rownames(design)]

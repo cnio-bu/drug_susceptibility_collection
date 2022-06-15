@@ -103,7 +103,7 @@ def get_mets_genesets(wildcards):
 
     return expand(
         f"{results}/mets/genesets/{{met_type}}",
-        gene=glob_wildcards(os.path.join(checkpoint_output, "{met_type}.csv")).met_type,
+        met_type=glob_wildcards(os.path.join(checkpoint_output, "{met_type}.csv")).met_type,
     )
 
 

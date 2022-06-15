@@ -50,4 +50,4 @@ rule mets_geneset_from_ebayes:
     conda:
         "../envs/generate_genesets.yaml"
     script:
-        "../scripts/metastasis_geneset_from_ebayes.R.R"
+        "../scripts/metastasis_geneset_from_ebayes.R"

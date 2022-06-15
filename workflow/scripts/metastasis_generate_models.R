@@ -34,7 +34,7 @@ selected_models <- metastasis_penetrance %>%
         DepMap_ID,
         mean, 
         penetrance,
-        CCLE_Name,
+        cell_line,
         lineage,
         original_lineage,
         primary_or_metastasis
@@ -47,7 +47,7 @@ selected_models <- metastasis_penetrance %>%
 ## Get the nº. lines/compound
 lines_and_mets <- selected_models %>%
     group_by(met_model) %>%
-    summarise(profiled_lines = n_distinct(depmap_id)) %>%
+    summarise(profiled_lines = n_distinct(DepMap_ID)) %>%
     as.data.frame()
 
 write.csv(lines_and_mets, file = met_lines_profiled, row.names=FALSE)
