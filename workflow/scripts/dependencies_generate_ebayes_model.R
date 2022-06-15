@@ -36,7 +36,7 @@ dge <- calcNormFactors(dge, method = "TMM")
 v <- voom(dge, design = design, normalize.method = "quantile", plot=FALSE)
 
 fit <- lmFit(v, design)
-fit <- treat(fit, lfc = .5)
+fit <- ebayes(fit)
 
 saveRDS(fit, ebayes_model)
 

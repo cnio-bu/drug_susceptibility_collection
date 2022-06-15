@@ -74,7 +74,7 @@ def main():
 
     # Filter out genes with less than 5 cell lines dependant on them
     melted_crispr = melted_crispr.groupby("Gene").filter(
-        lambda x: len(x[x["probability"] >= 0.95]) >= 5
+        lambda x: len(x[x["probability"] >= 0.5]) >= 5
     )
 
     # annotate the lineage and stripped name
