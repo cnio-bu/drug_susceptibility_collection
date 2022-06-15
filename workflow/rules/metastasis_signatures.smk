@@ -18,7 +18,7 @@ checkpoint met_generate_models:
         "../scripts/metastasis_generate_models.R"
 
 
-rule met_models_diffexpr:
+rule mets_generate_ebayes:
     input:
         raw_gene_counts=rules.get_rnaseq_counts.output.raw_gene_counts,
         mets_to_test=f"{results}/mets/met_model_candidates/{{met_type}}.csv",
@@ -34,3 +34,20 @@ rule met_models_diffexpr:
         "../envs/prism_limma.yaml"
     script:
         "../scripts/metastasis_generate_ebayes_model.R"
+
+
+rule mets_geneset_from_ebayes:
+    input:
+        fitted_bayes=rules.mets_generate_ebayes.output.ebayes,
+    output:
+        bidirectional_geneset=directory(f"{results}/mets/genesets/{{met_type}}"),
+    log:
+        f"{LOGDIR}/mets_genesets/{{met_type}}.log",
+    threads: get_resource("ctrp_generate_geneset", "threads"),
+    resources:
+        mem_mb=get_resource("ctrp_generate_geneset", "mem_mb"),
+        walltime=get_resource("ctrp_generate_geneset", "walltime"),
+    conda:
+        "../envs/generate_genesets.yaml"
+    script:
+        "../scripts/metastasis_geneset_from_ebayes.R.R"
