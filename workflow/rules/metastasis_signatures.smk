@@ -16,3 +16,21 @@ checkpoint met_generate_models:
         "../envs/common_file_manipulation.yaml"
     script:
         "../scripts/metastasis_generate_models.R"
+
+
+rule met_models_diffexpr:
+    input:
+        raw_gene_counts=rules.get_rnaseq_counts.output.raw_gene_counts,
+        mets_to_test=f"{results}/mets/met_model_candidates/{{met_type}}.csv",
+    output:
+        ebayes=f"{results}/mets/ebayes/{{met_type}}_eBayes.rds",
+    log:
+        f"{LOGDIR}/mets_compounds_diffexpr/{{met_type}}.log",
+    threads: get_resource("gdsc_compounds_diffexp", "threads"),
+    resources:
+        mem_mb=get_resource("gdsc_compounds_diffexp", "mem_mb"),
+        walltime=get_resource("gdsc_compounds_diffexp", "walltime"),
+    conda:
+        "../envs/prism_limma.yaml"
+    script:
+        "../scripts/metastasis_generate_ebayes_model.R"
