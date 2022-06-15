@@ -27,16 +27,16 @@ design <- model.matrix(~lineage + probability, data=dep_to_test)
 count_matrix <- count_matrix[,rownames(design)]
 
 dge  <- DGEList(counts=count_matrix)
-keep <- filterByExpr(dge, design=design)
+keep <- filterByExpr(dge, design=design, min.total.count = 100, min.count = 50)
 
 dge <- dge[keep, keep.lib.sizes=FALSE]
-dge <- calcNormFactors(dge)
+dge <- calcNormFactors(dge, method = "TMM")
 
 ## TODO: save voom model plot
-v <- voom(dge, plot=FALSE, normalize.method='quantile')
+v <- voom(dge, design = design, normalize.method = "quantile", plot=FALSE)
 
 fit <- lmFit(v, design)
-fit <- eBayes(fit)
+fit <- ebayes(fit)
 
 saveRDS(fit, ebayes_model)
 

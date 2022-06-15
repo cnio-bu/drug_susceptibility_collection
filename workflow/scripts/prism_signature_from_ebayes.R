@@ -44,7 +44,7 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
     if(length(resistance_genes) >= 15){
         candidate_genes <- extract_top_genes(deg_genes, 'resistance', signature_type=signature_type)
         resistance_set <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
-        setName(resistance_set) <- paste(sig_name, 'DN', sep='_')
+        setName(resistance_set) <- paste(sig_name, 'DOWN', sep='_')
         
         GSEABase::toGmt(resistance_set, con = paste(geneset_directory, '/', sig_name, '_DOWN', '.gmt', sep='')) 
     }

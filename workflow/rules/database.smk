@@ -10,7 +10,7 @@ rule ctrp_build_db:
         f"{LOGDIR}/ctrp_build_db/log.txt",
     threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
         walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -30,7 +30,7 @@ rule gdsc_build_db:
         f"{LOGDIR}/gdsc_build_db/log.txt",
     threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
         walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -49,7 +49,7 @@ rule prism_build_db:
         f"{LOGDIR}/prism_build_db/log.txt",
     threads: get_resource("annotate_cell_lines", "threads"),
     resources:
-        mem=get_resource("annotate_cell_lines", "mem"),
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
         walltime=get_resource("annotate_cell_lines", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
@@ -70,7 +70,7 @@ rule build_drug_database:
         drug_summary_rd=f"{results}/drug_summary.rdata",
     threads: get_resource("default", "threads"),
     resources:
-        mem=get_resource("default", "mem"),
+        mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"

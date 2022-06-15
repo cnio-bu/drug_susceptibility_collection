@@ -5,43 +5,43 @@ log_directory: ""
 resources:
   default:
     threads: 1
-    mem: 8192
+    mem_mb: 8192
     walltime: 30
   annotate_cell_lines:
     threads: 1
-    mem: 4096
+    mem_mb: 4096
     walltime: 10
   get_rnaseq_counts:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 20
   ctrp_annotate_models:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 20
   ctrp_generate_ebayes:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 60
   ctrp_generate_geneset:
     threads: 1
-    mem: 4096
+    mem_mb: 4096
     walltime: 10
   gdsc_normalize_arrays:
     threads: 1
-    mem: 20480
+    mem_mb: 20480
     walltime: 30
   gdsc_generate_compound_curves:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 30
   gdsc_compounds_diffexp:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 10
   gdsc_generate_geneset:
     threads: 1
-    mem: 16000
+    mem_mb: 16000
     walltime: 20
   
   

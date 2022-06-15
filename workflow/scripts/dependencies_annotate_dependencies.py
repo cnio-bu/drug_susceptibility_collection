@@ -14,7 +14,7 @@ def main():
     lines = pd.read_csv(
         lines_info,
         sep=",",
-        usecols=["DepMap_ID", "stripped_cell_line_name", "lineage"],
+        usecols=["DepMap_ID", "stripped_cell_line_name", "lineage", "primary_disease"],
         index_col=0,
     )
 
@@ -33,19 +33,21 @@ def main():
 
     del rna_seq_lines
 
+    # Drop non cancerous or unknown CCL
+    not_cancer = lines.loc[
+        lines["primary_disease"].isin(["Unknown", "Non-Cancerous"]), ].index
+
+    raw_crispr_data = raw_crispr_data[~raw_crispr_data.index.isin(not_cancer)]
+
+    # Drop lineages with too (<4) samples. TODO: automatize upstream
+    embryo_or_epidermoid = lines.loc[lines["lineage"].isin(["epidermoid_carcinoma", "embryo"]), ].index
+    raw_crispr_data = raw_crispr_data[~raw_crispr_data.index.isin(embryo_or_epidermoid)]
+    
     # Transpose for better performance. Genes are rows now
     raw_crispr_data = raw_crispr_data.T
 
     # Get rid of genes with NaN values, usually due to defective processing/contamination
     filtered_crispr_data = raw_crispr_data.dropna(axis=0)
-
-    # Drop engineered cell lines, If present
-    is_engineered = lines.loc[
-        lines["lineage"].str.contains("engineered"), "stripped_cell_line_name"
-    ]
-    filtered_crispr_data = filtered_crispr_data.loc[
-        :, ~filtered_crispr_data.columns.isin(is_engineered)
-    ]
 
     # Get index as columns to avoid R calling it 'X'
     filtered_crispr_data.reset_index(drop=False, inplace=True)
@@ -72,7 +74,7 @@ def main():
 
     # Filter out genes with less than 5 cell lines dependant on them
     melted_crispr = melted_crispr.groupby("Gene").filter(
-        lambda x: len(x[x["probability"] >= 0.95]) >= 5
+        lambda x: len(x[x["probability"] >= 0.5]) >= 5
     )
 
     # annotate the lineage and stripped name
