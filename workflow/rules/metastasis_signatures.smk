@@ -1,6 +1,6 @@
 import glob
 
-checkpoint met_generate_models:
+checkpoint mets_generate_models:
     input:
         metastasis_data=datasets.loc["met_experiment_data", "directory"],
         cell_lines_annotation=rules.annotate_cell_lines.output.cell_lines_annotation,
