@@ -7,6 +7,9 @@ raw_gene_counts       <- snakemake@input[["raw_gene_counts"]]
 
 ebayes_model          <- snakemake@output[["ebayes"]]
 
+### SNAKEMAKE PARAMS ###
+model_type <- snakemake@params[["model_type"]]
+
 ## Logging
 log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
@@ -28,7 +31,7 @@ count_matrix  <- ccle_counts[, lines_to_test]
 rownames(met_type_to_test) <- met_type_to_test$DepMap_ID
 
 ## voom model
-design <- model.matrix(~lineage + mean, data=met_type_to_test)
+design <- model.matrix(~lineage + model_type, data=met_type_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[ ,rownames(design)]
