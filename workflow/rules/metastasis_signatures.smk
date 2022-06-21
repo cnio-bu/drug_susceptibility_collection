@@ -79,7 +79,7 @@ rule mets_growth_geneset_from_ebayes:
 
 rule mets_penetrance_geneset_from_ebayes:
     input:
-        fitted_bayes=rules.mets_genetrance_generate_ebayes.output.ebayes,
+        fitted_bayes=rules.mets_penetrance_generate_ebayes.output.ebayes,
     output:
         bidirectional_geneset=directory(f"{results}/mets/genesets/{{met_type}}_penetrance"),
     log:
