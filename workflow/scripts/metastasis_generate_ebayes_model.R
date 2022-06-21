@@ -7,6 +7,9 @@ raw_gene_counts       <- snakemake@input[["raw_gene_counts"]]
 
 ebayes_model          <- snakemake@output[["ebayes"]]
 
+### SNAKEMAKE PARAMS ###
+model_type <- snakemake@params[["model_type"]]
+
 ## Logging
 log <- file(snakemake@log[[1]], open = "wt")
 sink(log)
@@ -19,6 +22,7 @@ met_type_to_test      <- read.csv(met_type_to_test)
 
 ## Sanity check
 met_type_to_test$mean            <- as.numeric(met_type_to_test$mean)
+met_type_to_test$penetrance      <- as.numeric/(met_type_to_test$penetrance)
 met_type_to_test$lineage        <- as.factor(met_type_to_test$lineage)
 
 ## Subset the counts
@@ -28,7 +32,11 @@ count_matrix  <- ccle_counts[, lines_to_test]
 rownames(met_type_to_test) <- met_type_to_test$DepMap_ID
 
 ## voom model
-design <- model.matrix(~lineage + mean, data=met_type_to_test)
+if(model_type == "mean"){
+    design <- model.matrix(~lineage + mean, data=met_type_to_test)
+}else{
+    design <- model.matrix(~lineage + penetrance, data=met_type_to_test)
+}
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[ ,rownames(design)]
