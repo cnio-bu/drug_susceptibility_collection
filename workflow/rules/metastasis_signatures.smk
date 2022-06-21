@@ -25,7 +25,7 @@ rule mets_growth_generate_ebayes:
     output:
         ebayes=f"{results}/mets/ebayes/{{met_type}}_growth_eBayes.rds",
     log:
-        f"{LOGDIR}/mets_compounds_diffexpr/{{met_type}}_growth.log",
+        f"{LOGDIR}/mets_diffexpr/{{met_type}}_growth.log",
     threads: get_resource("gdsc_compounds_diffexp", "threads"),
     resources:
         mem_mb=get_resource("gdsc_compounds_diffexp", "mem_mb"),
@@ -45,7 +45,7 @@ rule mets_penetrance_generate_ebayes:
     output:
         ebayes=f"{results}/mets/ebayes/{{met_type}}_penetrance_eBayes.rds",
     log:
-        f"{LOGDIR}/mets_compounds_diffexpr/{{met_type}}_penetrance.log",
+        f"{LOGDIR}/mets_diffexpr/{{met_type}}_penetrance.log",
     threads: get_resource("gdsc_compounds_diffexp", "threads"),
     resources:
         mem_mb=get_resource("gdsc_compounds_diffexp", "mem_mb"),
