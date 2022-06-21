@@ -22,6 +22,7 @@ met_type_to_test      <- read.csv(met_type_to_test)
 
 ## Sanity check
 met_type_to_test$mean            <- as.numeric(met_type_to_test$mean)
+met_type_to_test$penetrance      <- as.numeric/(met_type_to_test$penetrance)
 met_type_to_test$lineage        <- as.factor(met_type_to_test$lineage)
 
 ## Subset the counts
