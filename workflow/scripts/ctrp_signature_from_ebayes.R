@@ -27,8 +27,8 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
         sensitivity_genes <- deg_genes[deg_genes$t <0, 'ID']
         resistance_genes  <- deg_genes[deg_genes$t >0, 'ID']
     }else{
-        sensitivity_genes <- deg_genes[deg_genes$logFC <= -1, 'ID']
-        resistance_genes  <- deg_genes[deg_genes$logFC >= 1, 'ID']
+        sensitivity_genes <- deg_genes[deg_genes$logFC < 0, 'ID']
+        resistance_genes  <- deg_genes[deg_genes$logFC > 0, 'ID']
     }
     if(length(sensitivity_genes) >= 15){
        candidate_genes <- extract_top_genes(deg_genes, 'sensitivity', signature_type=signature_type)
@@ -55,14 +55,12 @@ extract_top_genes <- function(deg_genes, mode='sensitivity', signature_type='cla
         if(signature_type=='classic'){
             deg_genes <- head(deg_genes[order(deg_genes$t), 'ID'], n=500)
         }else{
-            deg_genes <- deg_genes[deg_genes$logFC <= -1,]
             deg_genes <- head(deg_genes[order(deg_genes$logFC), 'ID'], n=250)
         }
     }else{
         if(signature_type=='classic'){
             deg_genes <- head(deg_genes[order(-deg_genes$t), 'ID'], n=500)
         }else{
-        deg_genes <- deg_genes[deg_genes$logFC >= 1,]
         deg_genes <- head(deg_genes[order(-deg_genes$logFC), 'ID'], n=250)
         }
     }
