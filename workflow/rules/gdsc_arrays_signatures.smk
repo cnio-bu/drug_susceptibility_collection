@@ -42,7 +42,7 @@ checkpoint gdsc_generate_compound_curves:
         f"{LOGDIR}/gdsc_generate_compound_curves/log.log",
     threads: get_resource("gdsc_generate_compound_curves", "threads"),
     resources:
-        mem_mb_mb=get_resource("gdsc_generate_compound_curves", "mem_mb"),
+        mem_mb=get_resource("gdsc_generate_compound_curves", "mem_mb"),
         walltime=get_resource("gdsc_generate_compound_curves", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
