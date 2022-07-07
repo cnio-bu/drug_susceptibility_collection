@@ -5,7 +5,8 @@ rule gdsc_download_cel_files:
         raw_cel_files=directory(f"{results}/gdsc/array_data/raw")
     threads: 1
     resources:
-        mem_mb_mb=1024,
+        mem_mb=8192,
+        walltime=120,
     conda:
         "../envs/gdsc_arrayexpress.yaml"
     script:
@@ -42,7 +43,7 @@ checkpoint gdsc_generate_compound_curves:
         f"{LOGDIR}/gdsc_generate_compound_curves/log.log",
     threads: get_resource("gdsc_generate_compound_curves", "threads"),
     resources:
-        mem_mb_mb=get_resource("gdsc_generate_compound_curves", "mem_mb"),
+        mem_mb=get_resource("gdsc_generate_compound_curves", "mem_mb"),
         walltime=get_resource("gdsc_generate_compound_curves", "walltime"),
     conda:
         "../envs/common_file_manipulation.yaml"
