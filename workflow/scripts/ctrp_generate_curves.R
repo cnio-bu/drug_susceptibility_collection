@@ -106,6 +106,9 @@ compounds_to_test <- lines_and_compounds %>%
     pull(broad_cpd_id)
 
 ## set lineage if undiff
+drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap %>% 
+    filter(broad_cpd_id %in% compounds_to_test)
+    
 drug_data_annotated_lines_depmap[drug_data_annotated_lines_depmap$is_undifferentiated, "lineage"] <- "undifferentiated"
 
 drug_data_annotated_lines_depmap$lineage          <- as.factor(drug_data_annotated_lines_depmap$lineage)
