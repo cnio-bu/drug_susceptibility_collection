@@ -20,9 +20,10 @@ rule ctrp_build_db:
 
 rule gdsc_build_db:
     input:
-        compound_data=glob.glob(f"{results}/gdsc/auc_models_candidates/*.csv"),
+        signatures_data=glob.glob(f"{results}/gdsc/auc_models_candidates/*.csv"),
         lines_compounds=rules.gdsc_generate_compound_curves.output.compounds_lines_profiled,
         cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
+        compound_meta=datasets.loc["gdsc_compound_meta", "directory"],
     output:
         csv_db=f"{results}/gdsc/drug_data.csv",
         rdata_db=f"{results}/gdsc/drug_data.rdata",
