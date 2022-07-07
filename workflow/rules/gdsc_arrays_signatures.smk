@@ -5,7 +5,8 @@ rule gdsc_download_cel_files:
         raw_cel_files=directory(f"{results}/gdsc/array_data/raw")
     threads: 1
     resources:
-        mem_mb=1024,
+        mem_mb=8192,
+        walltime=120,
     conda:
         "../envs/gdsc_arrayexpress.yaml"
     script:
