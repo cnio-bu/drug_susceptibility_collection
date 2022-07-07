@@ -55,7 +55,7 @@ lines_by_compound <- candidate_curves %>%
                      group_by(DRUG_ID) %>%
                      summarise(
                         profiled_lines = n_distinct(SANGER_MODEL_ID),
-                        cv  = sd(auc) / mean(auc)
+                        cv  = sd(AUC) / mean(AUC)
                         ) %>%
                      as.data.frame()
 
