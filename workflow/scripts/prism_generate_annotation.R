@@ -42,9 +42,12 @@ lines_and_compounds <- response_curves %>%
 write.csv(lines_and_compounds, file = compounds_lines_profiled, row.names=FALSE)
 
 ## Keep compounds with at least 10 profiled lines and CV >= 0.1
+## Also, get rid of duplicated compund assays. Keep the one with the highest CV
 compounds_to_test <- lines_and_compounds %>%
     filter(profiled_lines >= 10 & cv >= 0.1) %>%
-    pull(broad_id)
+    arrange(desc(cv)) %>%
+    distinct(broad_id, .keep_all = TRUE) %>%
+    pull(broad_id)  
 
 response_curves   <- filter(response_curves, broad_id %in% compounds_to_test)
 
