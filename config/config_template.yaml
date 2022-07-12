@@ -43,5 +43,11 @@ resources:
     threads: 1
     mem_mb: 16000
     walltime: 20
+  get_gmt_collection:
+    threads: 1
+    mem_mb: 4096
+    walltime: 10
+
+
   
   
