@@ -81,10 +81,10 @@ if (nrow(top_genes) != 0) {
     resistance <- top_genes %>% filter(logFC > 0)
   }
   
-  # Keep the 500 top/bottom genes
-  sensitivity <- head(sensitivity, n = 500) %>% arrange(desc(get(magnitude))) %>% 
+  # Keep the 250 top/bottom genes
+  sensitivity <- head(sensitivity, n = 250) %>% arrange(desc(get(magnitude))) %>% 
     dplyr::select(hgnc) %>% pull
-  resistance <- tail(resistance, n = 500) %>% arrange(get(magnitude)) %>%
+  resistance <- tail(resistance, n = 250) %>% arrange(get(magnitude)) %>%
     dplyr::select(hgnc) %>% pull
   
   # Ugly fix to keep fold signatures at 250. We really should refactor these
