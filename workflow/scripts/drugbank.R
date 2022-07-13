@@ -35,10 +35,18 @@ brands <- drugBank$international_brands %>%
   select(-company) %>% 
   unique
 
+# PubChem ID
+pubchem <- drugBank$ex_identity %>%
+  filter(resource == "PubChem Compound") %>%
+  rename(PubChem.CID = identifier, DrugBank.ID = parent_key) %>%
+  select(-resource) %>%
+  unique
+
 # Merge dataframes
 drugbank <- dnames %>%
   merge(synonyms, all = TRUE) %>% 
-  merge(brands, all = TRUE)
+  merge(brands, all = TRUE) %>%
+  merge(pubchem, all = TRUE)
 
 # Collapsed names
 drugbank <- drugbank %>% 
