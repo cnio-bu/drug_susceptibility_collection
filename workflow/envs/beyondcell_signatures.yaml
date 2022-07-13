@@ -1,0 +1,9 @@
+name: beyondcell_signatures
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - bioconductor-qusage
+  - r-tidyverse

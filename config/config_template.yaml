@@ -2,6 +2,11 @@
 results_directory: ""
 log_directory: ""
 
+parameters:
+  drugbank:
+    directory: "/storage/scratch01/shared/databases/drugbank/v5.1.9/results"
+    blacklist: "/storage/scratch01/shared/databases/drugbank/v5.1.9/data/blacklist.tsv"
+
 resources:
   default:
     threads: 1
@@ -44,6 +49,10 @@ resources:
     mem_mb: 16000
     walltime: 20
   get_gmt_collection:
+    threads: 1
+    mem_mb: 4096
+    walltime: 10
+  drugbank_synonyms:
     threads: 1
     mem_mb: 4096
     walltime: 10

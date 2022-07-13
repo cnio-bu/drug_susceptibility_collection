@@ -7,6 +7,7 @@ configfile: "config/config.yaml"
 datasets = pd.read_csv("config/datasets.csv", sep=",", index_col=0)
 results = config["results_directory"]
 LOGDIR = config["log_directory"]
+DRUGBANKDIR = config["parameters"]["drugbank"]["directory"]
 
 
 def get_resource(rule, resource):
@@ -119,7 +120,9 @@ def get_mets_genesets_penetrance(wildcards):
 
 rule all:
     input:
-        f"{results}/drug_signatures_classic.gmt"
+        f"{results}/drug_signatures_classic.gmt",
+        f"{results}/drugbank_synonyms.tsv"
+
 
 ## Load rules ##
 include: "rules/common.smk"
@@ -130,3 +133,4 @@ include: "rules/dependency_signatures.smk"
 include: "rules/metastasis_signatures.smk"
 include: "rules/database.smk"
 include: "rules/generate_gmt_collections.smk"
+include: "rules/beyondcell_signatures.smk"
