@@ -57,13 +57,13 @@ extract_top_genes <- function(deg_genes, mode='sensitivity', signature_type='cla
     if(mode=='sensitivity'){
 
         if(signature_type=='classic'){
-            deg_genes <- head(deg_genes[order(deg_genes$t), 'ID'], n=500)
+            deg_genes <- head(deg_genes[order(deg_genes$t), 'ID'], n=250)
         }else{
             deg_genes <- head(deg_genes[order(deg_genes$logFC), 'ID'], n=250)
         }
     }else{
         if(signature_type=='classic'){
-            deg_genes <- head(deg_genes[order(-deg_genes$t), 'ID'], n=500)
+            deg_genes <- head(deg_genes[order(-deg_genes$t), 'ID'], n=250)
         }else{
         deg_genes <- head(deg_genes[order(-deg_genes$logFC), 'ID'], n=250)
         }
