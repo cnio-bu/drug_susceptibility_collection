@@ -15,14 +15,19 @@ db_summary_save_rd <- snakemake@output[['drug_summary_rd']]
 
 prism <- read_csv(prism_db) %>%
     mutate(project = "PRISM") %>%
-    rename(drug_id = broad_id)
+    rename(drug_id = broad_id,
+           cid = smiles
+           )
 
 ctrp  <- read_csv(ctrp_db) %>%
     mutate(project = "CTRP") %>%
-    rename(drug_id = broad_id)
+    rename(drug_id = broad_id,
+           cid = smile
+           )
 
 gdsc  <- read_csv(gdsc_db) %>%
     mutate(project = "GDSC") %>%
+    rename(cid = pubchem) %>%
     mutate(drug_id = as.character(drug_id))
 
 ## Cell line annotation
@@ -59,7 +64,9 @@ drug_summary <- combined_data %>%
               lines_tested = first(profiled_lines),
               min_auc = min(auc), 
               max_auc = max(auc),
-              mean_auc = mean(auc))
+              mean_auc = mean(auc),
+              cid = cid
+              )
 
 
 write_csv(combined_data, file = db_save)
