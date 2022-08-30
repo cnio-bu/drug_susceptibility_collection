@@ -27,6 +27,12 @@ filtered_data <- full_table %>%
         target,
         smiles
         ) %>%
+    mutate(
+         cid = str_remove_all(
+            string = cid,
+            pattern = ",.*"
+         )
+    ) %>%
     left_join(y = lines_compounds, by = "broad_id")
 
 

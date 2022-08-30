@@ -66,7 +66,8 @@ drug_summary <- combined_data %>%
               max_auc = max(auc),
               mean_auc = mean(auc),
               cid = cid
-              )
+              ) %>%
+    distinct()
 
 
 write_csv(combined_data, file = db_save)
