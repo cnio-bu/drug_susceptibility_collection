@@ -16,7 +16,17 @@ lines_compounds <- read_csv(lines_compounds)
 
 ## Now keep columns of interest
 filtered_data <- full_table %>%
-    select(broad_id, name, auc, ic50, depmap_id, lineage, moa, target) %>%
+    select(
+        broad_id,
+        name,
+        auc,
+        ic50,
+        depmap_id,
+        lineage,
+        moa,
+        target,
+        smiles
+        ) %>%
     left_join(y = lines_compounds, by = "broad_id")
 
 

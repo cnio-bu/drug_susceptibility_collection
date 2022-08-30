@@ -38,12 +38,14 @@ compound_meta <- read_tsv(compound_meta) %>%
     select(master_cpd_id,
            cpd_name,
            gene_symbol_of_protein_target,
-           target_or_activity_of_compound
+           target_or_activity_of_compound,
+           cpd_smiles,
            ) %>%
     rename(
         name = cpd_name,
         target = gene_symbol_of_protein_target,
-        moa = target_or_activity_of_compound
+        moa = target_or_activity_of_compound,
+        smile = cpd_smiles
         )
 
 filtered_annotated_data <- filtered_data %>%

@@ -2,19 +2,25 @@ library("tidyverse")
 
 
 ### SNAKEMAKE I/O ###
-compound_data        <- snakemake@input[['compound_data']]
-cell_line_annotation <- snakemake@input[['cell_line_annotation']]
-lines_compounds      <- snakemake@input[['lines_compounds']]
+signatures_data        <- snakemake@input[["signatures_data"]]
+cell_line_annotation <- snakemake@input[["cell_line_annotation"]]
+lines_compounds      <- snakemake@input[["lines_compounds"]]
+compound_meta        <- snakemake@input[["compound_meta"]]
 
-comma_file <- snakemake@output[['csv_db']]
-rdata      <- snakemake@output[['rdata_db']]
+comma_file <- snakemake@output[["csv_db"]]
+rdata      <- snakemake@output[["rdata_db"]]
 
-full_table <- compound_data %>%
+full_table <- signatures_data %>%
     map(read_csv) %>%
     reduce(bind_rows)
 
 ## Annotate how many lines were profiled by comp.
 lines_compounds <- read_csv(lines_compounds) 
+
+## load compound metadata
+compound_meta <- read_csv(compound_meta) %>%
+    filter(`Sample Size` == "GDSC2") %>%
+    select(drug_id, PubCHEM)
 
 ## Now keep columns of interest
 # broad_id, name, auc, ic50, depmap_id, lineage, moa
@@ -35,7 +41,11 @@ filtered_data <- full_table %>%
            ic50 = LN_IC50,
            cell_id = SANGER_MODEL_ID,
            moa = PATHWAY_NAME,
-           target = PUTATIVE_TARGET)
+           target = PUTATIVE_TARGET) %>%
+    left_join(y = compound_meta, by = "drug_id") %>%
+    rename(
+        pubchem = PubCHEM
+    )
 
 ## Attempt to get DepMap IDs using SANGER passport
 cell_line_annotation <- read_csv(cell_line_annotation) %>%
