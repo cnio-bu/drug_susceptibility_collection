@@ -1,19 +1,19 @@
-library('tidyverse')
+suppressMessages(library('tidyverse'))
 
 ### SNAKEMAKE I/O ###
 raw_expected_counts <- snakemake@input[["raw_expected_counts"]]
-cell_line_info <- snakemake@input[["cell_line_info"]]
+ccle_default_line <- snakemake@input[["ccle_default_line"]]
 protein_coding_genes <- snakemake@input[["protein_coding_genes"]]
 raw_gene_counts <- snakemake@output[["raw_gene_counts"]]
 
 ### SNAKEMAKE PARAMS ###
-coding_genes <- snakemake@params["coding_genes_only"]
+coding_genes <- as.logical(snakemake@params["coding_genes_only"])
 
 ## Load CCLE raw counts
 ccle_counts <- data.table::fread(raw_expected_counts)
 
 ## Load cell line equivalences
-cell_lines <- data.table::fread(cell_line_info)
+cell_lines <- data.table::fread(ccle_default_line)
 
 ## Keep RNA cell line equivalences
 cell_lines <- cell_lines %>%

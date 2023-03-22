@@ -1,9 +1,9 @@
 dataset,directory
 raw_ccle_reads,
+ccle_default_line,
+hgnc_protein_coding,
 celligner_data,
 ccle_sample_info,
-ccle_line_info,
-hgnc_protein_coding,
 prism_response_curves,
 prism_treatment_info,
 gdsc_response_curves,
