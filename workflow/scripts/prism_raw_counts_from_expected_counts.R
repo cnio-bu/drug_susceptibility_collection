@@ -2,6 +2,7 @@ library('tidyverse')
 
 ### SNAKEMAKE I/O ###
 raw_expected_counts <- snakemake@input[['raw_expected_counts']]
+cell_line_info <- snakemake@input[['cell_line_info']]
 protein_coding_genes <- snakemake@input[['protein_coding_genes']]
 raw_gene_counts     <- snakemake@output[['raw_gene_counts']]
 
@@ -11,12 +12,24 @@ coding_genes <- snakemake@params["coding_genes_only"]
 # Load CCLE raw counts
 ccle_counts <- data.table::fread(raw_expected_counts)
 
+# Load cell line equivalences
+cell_lines <- data.table::fread(cell_line_info)
+
+# Keep RNA cell line equivaleces
+cell_lines <- cell_lines %>%
+  filter(ProfileType == "rna") %>%
+  rename(V1 = ProfileID) %>%
+  select(V1, ModelID) %>%
+  unique()
+
 # Convert CCLE raw counts to a matrix where each gene is a row and each sample, 
 # a column.
 # Input is RSEM expected counts (thus I have to round up to units)
 genes <- colnames(ccle_counts)[-1]
 ccle_counts <- ccle_counts %>%
-  column_to_rownames("V1") %>%
+  merge(cell_lines, by = "V1") %>%
+  column_to_rownames("ModelID") %>%
+  select(-V1) %>%
   t() %>%
   as.data.frame()
 rownames(ccle_counts) <- genes
@@ -34,7 +47,7 @@ ccle_counts <- ccle_counts %>%
   filter(!grepl(Gene, pattern = "ERCC-", fixed = TRUE))
 
 # If coding_genes = TRUE, just keep protein coding genes
-if(coding_genes) {
+if (coding_genes) {
   hgnc_coding_genes <- data.table::fread(protein_coding_genes) %>%
     rename(Gene = symbol, Ensembl = ensembl_gene_id) %>%
     select(Gene, Ensembl) %>%

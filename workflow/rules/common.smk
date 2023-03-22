@@ -17,6 +17,7 @@ rule annotate_cell_lines:
 rule get_rnaseq_counts:
     input:
         raw_expected_counts=datasets.loc["raw_ccle_reads", "directory"],
+        cell_line_info=datasets.loc["ccle_line_info", "directory"],
         protein_coding_genes=datasets.loc["hgnc_protein_coding", "directory"],
     output:
         raw_gene_counts=f"{results}/prism/raw_ccle_counts.rds",
