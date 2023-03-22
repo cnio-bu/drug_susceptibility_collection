@@ -1,54 +1,40 @@
-library('dplyr')
+library('tidyverse')
 
 ### SNAKEMAKE I/O ###
 raw_expected_counts <- snakemake@input[['raw_expected_counts']]
 raw_gene_counts     <- snakemake@output[['raw_gene_counts']]
 
-## load CCLE raw counts
-ccle_counts <- data.table::fread(raw_expected_counts) %>%
-    as.data.frame() ## I don't like tibbles
+# load CCLE raw counts
+ccle_counts <- data.table::fread(raw_expected_counts)
 
-## Convert it to a matrix where each gene is a row and each sample, a column.
-## Input is RSEM expected counts (thus I have to round up to units)
-rownames(ccle_counts) <- ccle_counts$V1
-ccle_counts$V1        <- NULL
-ccle_counts           <- t(ccle_counts)
-
-## as data.frame again because of the transposition
-ccle_counts           <- as.data.frame(ccle_counts)
-ccle_counts$Gene      <- rownames(ccle_counts)
+# Convert it to a matrix where each gene is a row and each sample, a column.
+# Input is RSEM expected counts (thus I have to round up to units)
+cell_lines <- colnames(ccle_counts)[-1]
+ccle_counts <- ccle_counts %>%
+  column_to_rownames("V1") %>%
+  t() %>%
+  as.data.frame()
+rownames(ccle_counts) <- cell_lines
 
 # Most of the genes with NA values are ERCC-0000X spike-ins
-ccle_counts           <- na.omit(ccle_counts)
+ccle_counts <- na.omit(ccle_counts)
 
 # BROAD format for gene names is HUGO (ENSEMBL)
-ccle_counts$Gene<- sub(pattern = " \\(.*", replacement = '', x=ccle_counts$Gene)
+ccle_counts <- ccle_counts %>%
+  mutate(gene_variance = unname(apply(ccle_counts, MARGIN = 1, FUN = var)),
+         Gene = str_remove(rownames(ccle_counts), pattern = " \\(.*")) %>%
+  # Get rid of remaining spikes
+  filter(!grepl(Gene, pattern = "ERCC-", fixed = TRUE))
 
-## Keep the most variable gene when two ENSEMBL ids point to the same HGNC
-ccle_counts$gene_variance <- apply(X=ccle_counts[,colnames(ccle_counts)!='Gene'], MARGIN=1, FUN=var)
+# Keep the most variable gene when two ENSEMBL ids point to the same HGNC
+ccle_counts <- ccle_counts %>%
+  group_by(Gene) %>%
+  filter(gene_variance == max(gene_variance)) %>%
+  column_to_rownames("Gene") %>%
+  select(-gene_variance)
 
-## sort by variance in descending order and keep the first of the duplicated
-## entries (the one with the highest variance)
-ccle_counts <- ccle_counts[order(-ccle_counts$gene_variance),]
-ccle_counts <- ccle_counts[!duplicated(ccle_counts$Gene, fromLast=FALSE),]
+# Round counts
+ccle_counts <- round(as.matrix(ccle_counts), digits = 0)
 
-# Get rid of the variance column
-ccle_counts$gene_variance <- NULL
-
-# Set the genes as rownames now that they are not duplicated and get rid 
-# of the column
-rownames(ccle_counts) <- ccle_counts$Gene
-ccle_counts$Gene      <- NULL
-
-ccle_counts           <- round(ccle_counts, digits=0)
-ccle_counts           <- as.matrix(ccle_counts)
-
-# Get rid of remaining spikes
-is_spikes <- grepl(pattern = "ERCC-", x = rownames(ccle_counts), fixed = TRUE)
-
-ccle_counts <- ccle_counts[!is_spikes, ]
-
-saveRDS(object=ccle_counts, file=raw_gene_counts)
-
-
-
+# Save object
+saveRDS(ccle_counts, file = raw_gene_counts)
