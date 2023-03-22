@@ -17,12 +17,15 @@ rule annotate_cell_lines:
 rule get_rnaseq_counts:
     input:
         raw_expected_counts=datasets.loc["raw_ccle_reads", "directory"],
+        protein_coding_genes=datasets.loc["hgnc_protein_coding", "directory"],
     output:
         raw_gene_counts=f"{results}/prism/raw_ccle_counts.rds",
     threads: get_resource("default", "threads"),
     resources:
         mem_mb=get_resource("default", "mem_mb"),
         walltime=get_resource("default", "walltime"),
+    params:
+        coding_genes_only = config["coding_genes_only"],
     conda:
         "../envs/common_file_manipulation.yaml"
     script:
