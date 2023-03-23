@@ -30,35 +30,33 @@ ccle_counts <- readRDS(count_matrix)
 available_lines    <- colnames(ccle_counts)
 rm(ccle_counts)
 
-## Match SANGER and CCLE info
-## I Manually tested it and only 1 line cannot be matched
-sanger_lines <- unique(candidate_curves$SANGER_MODEL_ID)
-ccle_lines   <- unique(cell_lines_annotation$Sanger_Model_ID)
-
-common_lines <- intersect(sanger_lines, ccle_lines)
-
-## Keep curves present in both the counts AND the CCLE metadata
-candidate_curves <- filter(
-    candidate_curves,
-    SANGER_MODEL_ID %in% common_lines, CELL_LINE_NAME %in% available_lines
+## common lines check
+common_lines <- intersect(
+    candidate_curves$SANGER_MODEL_ID, 
+    $Sanger_Model_ID
     )
 
-## Annotate cell line histology
-candidate_curves <- merge(x=candidate_curves,
-                         y=cell_lines_annotation[,c("Sanger_Model_ID", "lineage")],
-                         by.x="SANGER_MODEL_ID",
-                         by.y="Sanger_Model_ID",
-                         all.x=TRUE,
-                         all.y=FALSE)
+## Filter the curves based on expression availability and annotation
+candidate_curves_filtered <- candidate_curves %>%
+    filter(
+        SANGER_MODEL_ID %in% common_lines
+    ) %>%
+    left_join(
+        y = cell_lines_annotation[, c("Sanger_Model_ID", "DepMap_ID", "lineage")],
+        by = c("SANGER_MODEL_ID" = "Sanger_Model_ID")
+    ) %>%
+    filter(
+        DepMap_ID %in% available_lines
+    )
 
 ## get the number of profiled lines/compound
-lines_by_compound <- candidate_curves %>%
-                     group_by(DRUG_ID) %>%
-                     summarise(
-                        profiled_lines = n_distinct(SANGER_MODEL_ID),
-                        cv  = sd(AUC) / mean(AUC)
-                        ) %>%
-                     as.data.frame()
+lines_by_compound <- candidate_curves_filtered %>%
+    group_by(DRUG_ID) %>%
+    summarise(
+        profiled_lines = n_distinct(SANGER_MODEL_ID),
+        cv  = sd(AUC) / mean(AUC)
+    ) %>%
+    as.data.frame()
 
 write.csv(lines_by_compound, file=compounds_lines_profiled, row.names=FALSE)
 
@@ -78,4 +76,8 @@ if(!dir.exists(file.path(auc_models_candidates))){
 
 by(candidate_curves,
    candidate_curves$DRUG_ID,
-   FUN=function(i) write.csv(i, paste0(auc_models_candidates, "/", i$DRUG_ID[1], ".csv"), , row.names=FALSE))
+   FUN=function(i) write.csv(i, 
+                             paste0(auc_models_candidates, 
+                                    "/", i$DRUG_ID[1], ".csv"), ,
+                             row.names=FALSE)
+   )

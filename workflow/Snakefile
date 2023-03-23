@@ -161,7 +161,7 @@ rule all:
 ## Load rules ##
 include: "rules/common.smk"
 include: "rules/gdsc_arrays_signatures.smk"
-include: "rules/gdsc_rna_signatures.smk"
+include: "rules/gdsc_rnaseq_signatures.smk"
 include: "rules/prism_signatures.smk"
 include: "rules/ctrp_signatures.smk"
 include: "rules/dependency_signatures.smk"
