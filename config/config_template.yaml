@@ -1,6 +1,7 @@
 ---
 results_directory: ""
 log_directory: ""
+coding_genes_only: true
 
 resources:
   default:
