@@ -17,12 +17,12 @@ sink(log, type = "message")
 ccle_counts           <- readRDS(raw_gene_counts)
 compound_to_test      <- read.csv(compound_to_test)
 
-compound_to_test$auc            <- as.numeric(compound_to_test$auc)
+compound_to_test$AUC            <- as.numeric(compound_to_test$AUC)
 compound_to_test$lineage        <- as.factor(compound_to_test$lineage)
 
 ## Subset the counts
 lines_to_test <- compound_to_test$depmap_id
-count_matrix  <- ccle_counts[,lines_to_test]
+count_matrix  <- ccle_counts[, lines_to_test]
 
 rownames(compound_to_test) <- compound_to_test$depmap_id
 
