@@ -21,10 +21,10 @@ compound_to_test$AUC            <- as.numeric(compound_to_test$AUC)
 compound_to_test$lineage        <- as.factor(compound_to_test$lineage)
 
 ## Subset the counts
-lines_to_test <- compound_to_test$depmap_id
+lines_to_test <- compound_to_test$DepMap_ID
 count_matrix  <- ccle_counts[, lines_to_test]
 
-rownames(compound_to_test) <- compound_to_test$depmap_id
+rownames(compound_to_test) <- compound_to_test$DepMap_ID
 
 ## voom model
 design <- model.matrix(~lineage + AUC, data = compound_to_test)
