@@ -33,7 +33,7 @@ rm(ccle_counts)
 ## common lines check
 common_lines <- intersect(
     candidate_curves$SANGER_MODEL_ID, 
-    $Sanger_Model_ID
+    cell_lines_annotation$Sanger_Model_ID
     )
 
 ## Filter the curves based on expression availability and annotation
