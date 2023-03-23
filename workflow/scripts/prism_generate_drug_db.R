@@ -29,7 +29,7 @@ filtered_data <- full_table %>%
         ) %>%
     mutate(
          cid = str_remove_all(
-            string = cid,
+            string = smiles,
             pattern = ",.*"
          )
     ) %>%
