@@ -42,7 +42,7 @@ rule gdsc_rna_compounds_diffexpr:
 ##TODO: These two rules could benefit from rule inheritance
 rule gdsc_rna_geneset_from_ebayes_classic:
     input:
-        fitted_bayes=rules.gdsc_compounds_diffexp.output.ebayes,
+        fitted_bayes=rules.gdsc_rna_compounds_diffexpr.output.ebayes,
         treatment_info=datasets.loc["gdsc_response_curves", "directory"],
     output:
         bidirectional_geneset=directory(f"{results}/gdsc_rna/genesets/classic/{{drug_id}}"),
@@ -62,7 +62,7 @@ rule gdsc_rna_geneset_from_ebayes_classic:
 
 rule gdsc_rna_geneset_from_ebayes_fold:
     input:
-        fitted_bayes=rules.gdsc_compounds_diffexp.output.ebayes,
+        fitted_bayes=rules.gdsc_rna_compounds_diffexpr.output.ebayes,
         treatment_info=datasets.loc["gdsc_response_curves", "directory"],
     output:
         bidirectional_geneset=directory(f"{results}/gdsc_rna/genesets/fold/{{drug_id}}"),
