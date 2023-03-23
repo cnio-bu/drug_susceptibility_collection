@@ -103,12 +103,11 @@ if(nrow(all_genes) >= 15){
 
     common_name <- drug_info[drug_info$DRUG_ID == compound_id, "DRUG_NAME"]
         
-    if(length(common_name) == 0){
-        common_name <- compound_id}
-
-    brd_split   <- strsplit(x=compound_id, split="-", fixed=TRUE)[[1]][2]
+    if (length(common_name) == 0){
+        common_name <- compound_id
+    }
     
-    sig_name <- paste(sep="_", common_name,"GDSC",brd_split)
+    sig_name <- paste(sep="_", common_name, "GDSC", compound_id)
 
     generate_bidirectional_signature(sig_name, all_genes)
 
