@@ -67,15 +67,17 @@ compounds_to_test <- lines_by_compound %>%
     distinct(DRUG_ID, .keep_all = TRUE) %>%
     pull(DRUG_ID)
 
-candidate_curves   <- filter(candidate_curves, DRUG_ID %in% compounds_to_test)
+candidate_curves_filtered <- filter(candidate_curves_filtered,
+                                    DRUG_ID %in% compounds_to_test
+                                    )
 
-candidate_curves$lineage <- as.factor(candidate_curves$lineage)
+candidate_curves_filtered$lineage <- as.factor(candidate_curves_filtered$lineage)
 
 if(!dir.exists(file.path(auc_models_candidates))){
     dir.create(auc_models_candidates)}
 
-by(candidate_curves,
-   candidate_curves$DRUG_ID,
+by(candidate_curves_filtered,
+   candidate_curves_filtered$DRUG_ID,
    FUN=function(i) write.csv(i, 
                              paste0(auc_models_candidates, 
                                     "/", i$DRUG_ID[1], ".csv"), ,
