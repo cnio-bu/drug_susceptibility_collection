@@ -39,6 +39,27 @@ rule gdsc_build_db:
         "../scripts/gdsc_generate_drug_db.R"
 
 
+rule gdsc_rna_build_db:
+    input:
+        signatures_data=glob.glob(f"{results}/gdsc_rna/auc_models_candidates/*.csv"),
+        lines_compounds=rules.gdsc_generate_compound_curves.output.compounds_lines_profiled,
+        cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
+        compound_meta=datasets.loc["gdsc_compound_meta", "directory"],
+    output:
+        csv_db=f"{results}/gdsc_rna/drug_data.csv",
+        rdata_db=f"{results}/gdsc_rna/drug_data.rdata",
+    log:
+        f"{LOGDIR}/gdsc_build_db/log.txt",
+    threads: get_resource("annotate_cell_lines", "threads"),
+    resources:
+        mem_mb=get_resource("annotate_cell_lines", "mem_mb"),
+        walltime=get_resource("annotate_cell_lines", "walltime"),
+    conda:
+        "../envs/common_file_manipulation.yaml"
+    script:
+        "../scripts/gdsc_generate_drug_db.R"
+
+
 rule prism_build_db:
     input:
         compound_data=glob.glob(f"{results}/prism/auc_models_candidates/*.csv"),
