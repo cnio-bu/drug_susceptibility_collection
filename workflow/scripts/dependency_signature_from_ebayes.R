@@ -55,8 +55,7 @@ extract_top_genes <- function(deg_genes, mode='dependent_up'){
 
 bayes_results <- readRDS(eBayes_model)
 
-all_genes <- topTreat(bayes_results, coef = 'probability', 
-                     number = Inf, adjust.method = 'fdr')
+all_genes <- topTable(bayes_results, coef = 'probability', number = Inf, adjust.method = 'fdr')
 
 all_genes <- all_genes[all_genes$adj.P.Val <= 0.05, ]
 
