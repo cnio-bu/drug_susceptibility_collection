@@ -1,10 +1,10 @@
 library("tidyverse")
 
 ###  SNAKEMAKE I/O ###
-raw_crispr_data = snakemake@input[["crispr_gene_dependency_chronos"]]
-lines_info = snakemake@input[["sample_info"]]
-ccle_raw_reads = snakemake@input[["expression_matrix"]]
-where_to_save = snakemake@output[["model_candidates"]]
+raw_crispr_data <- snakemake@input[["crispr_gene_dependency_chronos"]]
+lines_info <- snakemake@input[["sample_info"]]
+ccle_raw_reads <- snakemake@input[["expression_matrix"]]
+where_to_save <- snakemake@output[["model_candidates"]]
 
 ccle_counts <- readRDS(ccle_raw_reads)
 crispr <- data.table::fread(raw_crispr_data)

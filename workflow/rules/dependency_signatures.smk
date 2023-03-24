@@ -4,7 +4,7 @@ checkpoint dependencies_annotate_crispr_data:
             "crispr_gene_dependency_chronos", "directory"
         ],
         sample_info=rules.annotate_cell_lines.output.cell_lines_annotation,
-        raw_expected_counts=rules.get_rnaseq_counts.output.raw_gene_counts,
+        expression_matrix=rules.get_rnaseq_counts.output.raw_gene_counts,
     output:
         model_candidates=directory(f"{results}/dependencies/model_candidates"),
     threads: get_resource("annotate_cell_lines", "threads"),
