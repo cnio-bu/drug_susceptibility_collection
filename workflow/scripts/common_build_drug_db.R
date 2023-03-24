@@ -14,6 +14,7 @@ db_summary_save_rd <- snakemake@output[['drug_summary_rd']]
 
 
 prism <- read_csv(prism_db) %>%
+    select(-cid) %>%
     mutate(project = "PRISM") %>%
     rename(drug_id = broad_id,
            cid = smiles

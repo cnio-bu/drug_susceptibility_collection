@@ -82,7 +82,7 @@ rule prism_build_db:
 rule build_drug_database:
     input:
         ctrp_db = rules.ctrp_build_db.output.csv_db,
-        gdsc_db = rules.gdsc_build_db.output.csv_db,
+        gdsc_db = rules.gdsc_rna_build_db.output.csv_db,
         prism_db = rules.prism_build_db.output.csv_db,
         cell_line_annotation = rules.annotate_cell_lines.output.cell_lines_annotation,
     output:
