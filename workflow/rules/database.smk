@@ -113,4 +113,4 @@ rule dependency_enrichment_from_bayes:
     conda:
         "../envs/fgsea.yaml"
     script:
-    "../scripts/dependencies_enrichment_from_ebayes.R"
+        "../scripts/dependencies_enrichment_from_ebayes.R"
