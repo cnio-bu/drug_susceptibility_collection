@@ -98,3 +98,19 @@ rule build_drug_database:
         "../envs/common_file_manipulation.yaml"
     script:
         "../scripts/common_build_drug_db.R"
+
+
+rule dependency_enrichment_from_bayes:
+    input:
+        ebayes_model = rules.dependencies_generate_ebayes.output.ebayes,
+        hallmarks = datasets.loc["hallmarks", "directory"],
+    output:
+        enrichments = f"{results}/dependencies/enrichments/{{gene}}_enrichment.tsv"
+    threads: 1
+    resources:
+        mem_mb = get_resource("default", "mem_mb"),
+        walltime = get_resource("default", "walltime"),
+    conda:
+        "../envs/fgsea.yaml"
+    script:
+    "../scripts/dependencies_enrichment_from_ebayes.R"

@@ -1,0 +1,10 @@
+---
+name: fgsea
+channels:
+  - conda-forge
+  - bioconda
+  - r
+  - defaults
+dependencies:
+  - bioconductor-fgsea
+  - bioconductor-limma
