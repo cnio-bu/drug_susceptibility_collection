@@ -31,6 +31,12 @@ fgsea_res <- fgsea(
     scoreType = "pos"
 )
 
+new_directory <- basename(dirname(enrichment_table))
+
+if (!dir.exists(file.path(new_directory))) {
+    dir.create(new_directory)
+    }
+
 write.table(
     x = fgsea_res,
     file = enrichment_table,
