@@ -31,6 +31,12 @@ fgsea_res <- fgsea(
     scoreType = "pos"
 )
 
+fgsea_res$leadingEdge <- sapply(
+    fgsea_res$leadingEdge,
+    FUN = paste,
+    collapse = " "
+    )
+
 new_directory <- dirname(enrichment_table)
 
 if (!dir.exists(file.path(new_directory))) {
