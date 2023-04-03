@@ -141,13 +141,23 @@ def get_mets_genesets_penetrance(wildcards):
         met_type=glob_wildcards(os.path.join(checkpoint_output, "{met_type}.csv")).met_type,
     )
 
-def get_all_deps_enrichment(wildcards):
+def get_all_deps_enrichment(wildcards): 
     checkpoint_output = checkpoints.dependencies_annotate_crispr_data.get(
         **wildcards
     ).output["model_candidates"]
 
     return expand(
         f"{results}/dependencies/enrichments/{{gene}}_enrichment.tsv",
+        gene=glob_wildcards(os.path.join(checkpoint_output, "{gene}.csv")).gene,
+    )
+
+def get_all_drugs_deps_enrichment(wildcards):
+    checkpoint_output = checkpoints.dependencies_annotate_crispr_data.get(
+        **wildcards
+    ).output["model_candidates"]
+
+    return expand(
+        f"{results}/dependencies/enrichments/{{gene}}_drugs_classic_enrichment.tsv",
         gene=glob_wildcards(os.path.join(checkpoint_output, "{gene}.csv")).gene,
     )
 
