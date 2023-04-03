@@ -114,3 +114,19 @@ rule dependency_enrichment_from_bayes:
         "../envs/fgsea.yaml"
     script:
         "../scripts/dependencies_enrichment_from_ebayes.R"
+
+
+rule dependency_drug_enrichment_from_bayes:
+    input:
+        ebayes_model = rules.dependencies_generate_ebayes.output.ebayes,
+        drugs = f"{results}/drug_signatures_classic.gmt",
+    output:
+        enrichments = f"{results}/dependencies/enrichments/{{gene}}_drugs_classic_enrichment.tsv"
+    threads: 1
+    resources:
+        mem_mb = get_resource("default", "mem_mb"),
+        walltime = get_resource("default", "walltime"),
+    conda:
+        "../envs/fgsea.yaml"
+    script:
+        "../scripts/dependencies_drug_enrichment_from_ebayes.R"
