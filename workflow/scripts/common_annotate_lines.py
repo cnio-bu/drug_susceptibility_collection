@@ -25,15 +25,15 @@ def main():
 
     ## Annotate lines data with data from the undifferentiated clusters
     lines_info = pd.read_csv(lines_info, sep=",")
-    lines_info["is_undifferentiated"] = lines_info["DepMap_ID"].isin(
+    lines_info["is_undifferentiated"] = lines_info["ModelID"].isin(
         undifferentiated_lines
     )
 
     # Preserve original lineage
-    lines_info["original_lineage"] = lines_info["lineage"]
+    lines_info["original_lineage"] = lines_info["OncotreeLineage"]
     
     # rename the lineages from the undif. lines to "undifferentiated"
-    lines_info.loc[lines_info["is_undifferentiated"], "lineage"] = "undifferentiated"
+    lines_info.loc[lines_info["is_undifferentiated"], "OncotreeLineage"] = "undifferentiated"
 
     lines_info.to_csv(where_to_save, sep=",", index=False)
 

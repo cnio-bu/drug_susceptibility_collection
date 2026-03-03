@@ -61,28 +61,28 @@ drug_data_annotated$human_ccl_name <- cell_meta[drug_data_annotated$master_ccl_i
 drug_data_annotated_lines <- drug_data_annotated[!is.na(drug_data_annotated$human_ccl_name),]
 
 # now get the ACH ids for the remaining lines
-annotations_fields_of_interest <- c("DepMap_ID", "stripped_cell_line_name", "lineage", "is_undifferentiated")
+annotations_fields_of_interest <- c("ModelID", "StrippedCellLineName", "OncotreeLineage", "is_undifferentiated")
 
 drug_data_annotated_lines_depmap <- merge(x=drug_data_annotated_lines,
                                           y=ccle_info[,annotations_fields_of_interest],
                                           by.x="human_ccl_name",
-                                          by.y="stripped_cell_line_name",
+                                          by.y="StrippedCellLineName",
                                           all.x=TRUE)
 
 
 ## Get rid of lines withou ACH-id If somehow there is any missing left
-drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[!is.na(drug_data_annotated_lines_depmap$DepMap_ID),]
+drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[!is.na(drug_data_annotated_lines_depmap$ModelID),]
 
 ## Get rid of compounds without area_under_curve
 drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[!is.na(drug_data_annotated_lines_depmap$area_under_curve),]
 
 ## Get rid of cell lines and curves for which no RNASeq profiling was done
-available_lines <- intersect(colnames(ccle_counts), drug_data_annotated_lines_depmap$DepMap_ID)
-drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[drug_data_annotated_lines_depmap$DepMap_ID %in% available_lines,]
+available_lines <- intersect(colnames(ccle_counts), drug_data_annotated_lines_depmap$ModelID)
+drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[drug_data_annotated_lines_depmap$ModelID %in% available_lines,]
 
 # If there are duplicate cell lines by compound, keep the one with the lowest auc
 drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[order(drug_data_annotated_lines_depmap$area_under_curve),]
-drug_line_duplicated             <- duplicated(drug_data_annotated_lines_depmap[,c("broad_cpd_id", "DepMap_ID")])
+drug_line_duplicated             <- duplicated(drug_data_annotated_lines_depmap[,c("broad_cpd_id", "ModelID")])
 drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap[!drug_line_duplicated,]
 
 ## Get the nº. lines/compound
@@ -90,7 +90,7 @@ lines_and_compounds <- drug_data_annotated_lines_depmap %>%
     group_by(broad_cpd_id) %>%
     mutate(area_under_curve = as.numeric(area_under_curve)) %>%
     summarise(
-        profiled_lines = n_distinct(DepMap_ID),
+        profiled_lines = n_distinct(ModelID),
         cv = sd(area_under_curve) / mean(area_under_curve)
         ) %>%
     as.data.frame()
@@ -109,9 +109,9 @@ compounds_to_test <- lines_and_compounds %>%
 drug_data_annotated_lines_depmap <- drug_data_annotated_lines_depmap %>% 
     filter(broad_cpd_id %in% compounds_to_test)
     
-drug_data_annotated_lines_depmap[drug_data_annotated_lines_depmap$is_undifferentiated, "lineage"] <- "undifferentiated"
+drug_data_annotated_lines_depmap[drug_data_annotated_lines_depmap$is_undifferentiated, "OncotreeLineage"] <- "undifferentiated"
 
-drug_data_annotated_lines_depmap$lineage          <- as.factor(drug_data_annotated_lines_depmap$lineage)
+drug_data_annotated_lines_depmap$OncotreeLineage          <- as.factor(drug_data_annotated_lines_depmap$OncotreeLineage)
 drug_data_annotated_lines_depmap$area_under_curve <- as.numeric(drug_data_annotated_lines_depmap$area_under_curve)
 
 if(!dir.exists(file.path(auc_models_candidates))){

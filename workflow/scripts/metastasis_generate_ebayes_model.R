@@ -23,19 +23,19 @@ met_type_to_test      <- read.csv(met_type_to_test)
 ## Sanity check
 met_type_to_test$mean            <- as.numeric(met_type_to_test$mean)
 met_type_to_test$penetrance      <- as.numeric(met_type_to_test$penetrance)
-met_type_to_test$lineage        <- as.factor(met_type_to_test$lineage)
+met_type_to_test$OncotreeLineage        <- as.factor(met_type_to_test$OncotreeLineage)
 
 ## Subset the counts
-lines_to_test <- met_type_to_test$DepMap_ID
+lines_to_test <- met_type_to_test$ModelID
 count_matrix  <- ccle_counts[, lines_to_test]
 
-rownames(met_type_to_test) <- met_type_to_test$DepMap_ID
+rownames(met_type_to_test) <- met_type_to_test$ModelID
 
 ## voom model
 if(model_type == "mean"){
-    design <- model.matrix(~lineage + mean, data=met_type_to_test)
+    design <- model.matrix(~OncotreeLineage + mean, data=met_type_to_test)
 }else{
-    design <- model.matrix(~lineage + penetrance, data=met_type_to_test)
+    design <- model.matrix(~OncotreeLineage + penetrance, data=met_type_to_test)
 }
 
 ## reorder count_matrix so that cols matches rows from design

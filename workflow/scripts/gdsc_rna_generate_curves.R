@@ -33,7 +33,7 @@ rm(ccle_counts)
 ## common lines check
 common_lines <- intersect(
     candidate_curves$SANGER_MODEL_ID, 
-    cell_lines_annotation$Sanger_Model_ID
+    cell_lines_annotation$SangerModelID
     )
 
 ## Filter the curves based on expression availability and annotation
@@ -42,11 +42,11 @@ candidate_curves_filtered <- candidate_curves %>%
         SANGER_MODEL_ID %in% common_lines
     ) %>%
     left_join(
-        y = cell_lines_annotation[, c("Sanger_Model_ID", "DepMap_ID", "lineage")],
-        by = c("SANGER_MODEL_ID" = "Sanger_Model_ID")
+        y = cell_lines_annotation[, c("SangerModelID", "ModelID", "OncotreeLineage")],
+        by = c("SANGER_MODEL_ID" = "SangerModelID")
     ) %>%
     filter(
-        DepMap_ID %in% available_lines
+        ModelID %in% available_lines
     )
 
 ## get the number of profiled lines/compound
@@ -71,7 +71,7 @@ candidate_curves_filtered <- filter(candidate_curves_filtered,
                                     DRUG_ID %in% compounds_to_test
                                     )
 
-candidate_curves_filtered$lineage <- as.factor(candidate_curves_filtered$lineage)
+candidate_curves_filtered$OncotreeLineage <- as.factor(candidate_curves_filtered$OncotreeLineage)
 
 if(!dir.exists(file.path(auc_models_candidates))){
     dir.create(auc_models_candidates)}

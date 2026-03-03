@@ -11,7 +11,7 @@ comma_file <- snakemake@output[["csv_db"]]
 rdata      <- snakemake@output[["rdata_db"]]
 
 full_table <- signatures_data %>%
-    map(read_csv) %>%
+    map(read_csv, col_types = cols(DRUG_NAME = col_character())) %>%
     reduce(bind_rows)
 
 ## Annotate how many lines were profiled by comp.
@@ -19,8 +19,9 @@ lines_compounds <- read_csv(lines_compounds)
 
 ## load compound metadata
 compound_meta <- read_csv(compound_meta) %>%
-    filter(`Sample Size` == "GDSC2") %>%
-    select(drug_id, PubCHEM)
+    filter(Datasets == "GDSC2") %>%
+    select(`Drug Id`, PubCHEM) %>%
+    rename(drug_id = `Drug Id`)
 
 ## Now keep columns of interest
 # broad_id, name, auc, ic50, depmap_id, lineage, moa
@@ -30,7 +31,7 @@ filtered_data <- full_table %>%
            AUC,
            LN_IC50,
            SANGER_MODEL_ID,
-           lineage,
+           OncotreeLineage,
            PUTATIVE_TARGET,
            PATHWAY_NAME
            ) %>%
@@ -49,9 +50,9 @@ filtered_data <- full_table %>%
 
 ## Attempt to get DepMap IDs using SANGER passport
 cell_line_annotation <- read_csv(cell_line_annotation) %>%
-    select(Sanger_Model_ID, DepMap_ID) %>%
-    rename(cell_id = Sanger_Model_ID,
-           depmap_id = DepMap_ID) %>%
+    select(SangerModelID, ModelID) %>%
+    rename(cell_id = SangerModelID,
+           depmap_id = ModelID) %>%
     filter(!is.na(cell_id))
 
 filtered_annotated_data <- filtered_data %>%

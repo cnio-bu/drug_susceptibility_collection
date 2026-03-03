@@ -33,27 +33,27 @@ gdsc  <- read_csv(gdsc_db) %>%
 
 ## Cell line annotation
 cell_line_annotation <- read_csv(cell_line_annotation) %>%
-    select(DepMap_ID,
-           stripped_cell_line_name,
+    select(ModelID,
+           StrippedCellLineName,
            original_lineage,
-           lineage,
-           lineage_subtype,
-           primary_or_metastasis
+           OncotreeLineage,
+           OncotreeSubtype,
+           PrimaryOrMetastasis
            ) %>%
-    rename(depmap_id = DepMap_ID,
-           cell_line = stripped_cell_line_name,
+    rename(depmap_id = ModelID,
+           cell_line = StrippedCellLineName,
            origin = original_lineage,
-           origin_subtype = lineage_subtype,
-           tumor_type = primary_or_metastasis
+           origin_subtype = OncotreeSubtype,
+           tumor_type = PrimaryOrMetastasis
            )
 
 ## attempt to merge the data by outer join and add project 
 combined_data <- prism %>%
     bind_rows(ctrp) %>%
     bind_rows(gdsc) %>%
-    select(-lineage) %>%
+    select(-OncotreeLineage) %>%
     left_join(cell_line_annotation, "depmap_id") %>%
-    rename(celligner_origin = lineage)
+    rename(celligner_origin = OncotreeLineage)
 
 
 ## generate summary
@@ -66,7 +66,7 @@ drug_summary <- combined_data %>%
               min_auc = min(auc), 
               max_auc = max(auc),
               mean_auc = mean(auc),
-              cid = cid
+              cid = first(cid)
               ) %>%
     distinct()
 

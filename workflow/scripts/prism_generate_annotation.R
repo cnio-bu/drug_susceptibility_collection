@@ -53,13 +53,13 @@ response_curves   <- filter(response_curves, broad_id %in% compounds_to_test)
 
 ## Annotate cell line histology
 response_curves <- merge(x=response_curves,
-                         y=cell_lines_annotation[,c("DepMap_ID", "lineage")],
+                         y=cell_lines_annotation[,c("ModelID", "OncotreeLineage")],
                          by.x="depmap_id",
-                         by.y="DepMap_ID",
+                         by.y="ModelID",
                          all.x=TRUE,
                          all.y=FALSE)
 
-response_curves$lineage <- as.factor(response_curves$lineage)
+response_curves$OncotreeLineage <- as.factor(response_curves$OncotreeLineage)
 
 if(!dir.exists(file.path(auc_models_candidates))){
     dir.create(auc_models_candidates)}

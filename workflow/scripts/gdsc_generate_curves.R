@@ -35,7 +35,7 @@ rm(array_metadata)
 ## Match SANGER and CCLE info
 ## I Manually tested it and only 1 line cannot be matched
 sanger_lines <- unique(candidate_curves$SANGER_MODEL_ID)
-ccle_lines   <- unique(cell_lines_annotation$Sanger_Model_ID)
+ccle_lines   <- unique(cell_lines_annotation$SangerModelID)
 
 common_lines <- intersect(sanger_lines, ccle_lines)
 
@@ -44,9 +44,9 @@ candidate_curves <- filter(candidate_curves, SANGER_MODEL_ID %in% common_lines, 
 
 ## Annotate cell line histology
 candidate_curves <- merge(x=candidate_curves,
-                         y=cell_lines_annotation[,c("Sanger_Model_ID", "lineage")],
+                         y=cell_lines_annotation[,c("SangerModelID", "OncotreeLineage")],
                          by.x="SANGER_MODEL_ID",
-                         by.y="Sanger_Model_ID",
+                         by.y="SangerModelID",
                          all.x=TRUE,
                          all.y=FALSE)
 
@@ -71,7 +71,7 @@ compounds_to_test <- lines_by_compound %>%
 
 candidate_curves   <- filter(candidate_curves, DRUG_ID %in% compounds_to_test)
 
-candidate_curves$lineage <- as.factor(candidate_curves$lineage)
+candidate_curves$OncotreeLineage <- as.factor(candidate_curves$OncotreeLineage)
 
 if(!dir.exists(file.path(auc_models_candidates))){
     dir.create(auc_models_candidates)}

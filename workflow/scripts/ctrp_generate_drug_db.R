@@ -23,14 +23,14 @@ filtered_data <- full_table %>%
            broad_cpd_id,
            area_under_curve,
            apparent_ec50_umol,
-           DepMap_ID,
-           lineage
+           ModelID,
+           OncotreeLineage
            ) %>%
     left_join(y = lines_compounds, by = "broad_cpd_id") %>%
     rename(broad_id = broad_cpd_id,
            auc = area_under_curve,
            ec50 = apparent_ec50_umol,
-           depmap_id = DepMap_ID)
+           depmap_id = ModelID)
 
 
 ## We need to annotate the moa for CRTP

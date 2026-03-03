@@ -7,25 +7,26 @@ ccle_raw_reads <- snakemake@input[["expression_matrix"]]
 where_to_save <- snakemake@output[["model_candidates"]]
 
 ccle_counts <- readRDS(ccle_raw_reads)
-crispr <- data.table::fread(raw_crispr_data)
+crispr <- data.table::fread(raw_crispr_data) %>%
+    rename(ModelID = V1)
 annot <-  data.table::fread(lines_info)
 
 ## keep lines whose primary disease is cancer AND with available expr.
 annot_cancer <- annot %>%
     filter(
-        !primary_disease %in% c("Unknown", "Non-Cancerous") 
+        !OncotreePrimaryDisease %in% c("Unknown", "Non-Cancerous")
     )
 
 ## drop lineages with too few CCLs
-all_lineages <- table(annot_cancer$lineage)
+all_lineages <- table(annot_cancer$OncotreeLineage)
 lineages_to_keep <- names(all_lineages[all_lineages >= 5])
 
 ## get the names of the CCLs whose lineages are OK AND with RNA-seq
 lines_to_keep <- annot_cancer %>%
     filter(
-        lineage %in% lineages_to_keep
+        OncotreeLineage %in% lineages_to_keep
     ) %>%
-    pull(DepMap_ID)
+    pull(ModelID)
 
 lines_to_keep <- intersect(lines_to_keep, colnames(ccle_counts))
 
@@ -39,9 +40,7 @@ crispr_lines <- crispr_filtered$ModelID
 crispr_filtered$ModelID <- NULL
 
 # CCLE nomenclature is HUGO (ENTREZ). Keep HUGO ONLY
-colnames(crispr_filtered) <- stringr::str_remove_all(string = colnames(crispr_filtered),
-                                                     pattern = " \\(.*$"
-                                                     )
+colnames(crispr_filtered) <- stringr::str_remove_all(string = colnames(crispr_filtered), pattern = " \\(.*$")
 
 ## Resolve duplicates keeping most variable gene
 crispr_filtered <- t(crispr_filtered)
@@ -75,13 +74,13 @@ crispr_enough_power <- crispr_probabilities %>%
 # annotate the lineage and stripped name
 crispr_enough_power_annotated <- crispr_enough_power %>%
     left_join(
-        y = annot_cancer[, c("DepMap_ID",
-                             "lineage",
-                             "stripped_cell_line_name",
+        y = annot_cancer[, c("ModelID",
+                             "OncotreeLineage",
+                             "StrippedCellLineName",
                              "original_lineage"
                              )
                          ],
-        by = c("cell_line" = "DepMap_ID")
+        by = c("cell_line" = "ModelID")
     )
 
 
