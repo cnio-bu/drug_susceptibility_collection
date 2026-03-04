@@ -25,7 +25,7 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
     dependency_upregulated         <- deg_genes[deg_genes$logFC > 0, "ID"]
     dependency_downregulated       <- deg_genes[deg_genes$logFC < 0, "ID"]
     
-    if(length(dependency_upregulated) >= 5){
+    if(length(dependency_upregulated) >= 20){
         
        candidate_genes  <- extract_top_genes(deg_genes, "met_UP")
        sensitivity_gset <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
@@ -33,7 +33,7 @@ generate_bidirectional_signature <- function(sig_name, deg_genes){
        
         GSEABase::toGmt(sensitivity_gset, con = paste(geneset_directory, "/", sig_name, "_", model_type, "_met_UP", ".gmt", sep=""))
     }
-    if(length(dependency_downregulated) >= 5){
+    if(length(dependency_downregulated) >= 20){
         candidate_genes <- extract_top_genes(deg_genes, "met_DOWN")
         resistance_set  <- GSEABase::GeneSet(candidate_genes, geneIdType=SymbolIdentifier())
         setName(resistance_set) <- paste(sig_name, "DOWN", sep="_")
@@ -67,9 +67,9 @@ if(!dir.exists(file.path(geneset_directory))){
     dir.create(geneset_directory)}
 
 
-if(nrow(all_genes) >= 5){
+if(nrow(all_genes) >= 20){
 
-    sig_name <- paste(sep="_", met_name, model_type, "MetMap", "2022")
+    sig_name <- paste(sep="_", met_name, model_type, "MetMap", "2020")
     generate_bidirectional_signature(sig_name, all_genes)
 }
 

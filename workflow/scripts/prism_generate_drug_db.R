@@ -22,7 +22,7 @@ filtered_data <- full_table %>%
         auc,
         ic50,
         depmap_id,
-        lineage,
+        OncotreeLineage,
         moa,
         target,
         smiles

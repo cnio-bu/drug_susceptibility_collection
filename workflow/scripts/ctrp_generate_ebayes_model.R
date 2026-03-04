@@ -13,16 +13,16 @@ compound_to_test      <- read.csv(compound_to_test)
 
 # This might be the only key difference between this script and Dep/PRISM generation
 compound_to_test$area_under_curve            <- as.numeric(compound_to_test$area_under_curve)
-compound_to_test$lineage                     <- as.factor(compound_to_test$lineage)
+compound_to_test$OncotreeLineage                     <- as.factor(compound_to_test$OncotreeLineage)
 
 ## Subset the counts
-lines_to_test <- compound_to_test$DepMap_ID
+lines_to_test <- compound_to_test$ModelID
 count_matrix  <- ccle_counts[,lines_to_test]
 
-rownames(compound_to_test) <- compound_to_test$DepMap_ID
+rownames(compound_to_test) <- compound_to_test$ModelID
 
 ## voom model
-design <- model.matrix(~lineage + area_under_curve, data=compound_to_test)
+design <- model.matrix(~OncotreeLineage + area_under_curve, data=compound_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[,rownames(design)]

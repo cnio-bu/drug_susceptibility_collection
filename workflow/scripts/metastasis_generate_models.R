@@ -21,33 +21,33 @@ ccle_counts <- readRDS(count_matrix)
 metastasis_penetrance <- left_join(
     x = metastasis_penetrance,
     y = cell_lines_annotation,
-    by = c("cell_line" = "CCLE_Name")
+    by = c("cell_line" = "CCLEName")
 )  
 
 ## Get rid of cell lines and met data for which no RNASeq profiling was done
-available_lines <- intersect(colnames(ccle_counts), metastasis_penetrance$DepMap_ID)
+available_lines <- intersect(colnames(ccle_counts), metastasis_penetrance$ModelID)
 
 selected_models <- metastasis_penetrance %>%
-    filter(DepMap_ID %in% available_lines) %>%
+    filter(ModelID %in% available_lines) %>%
     select(
         met_model,
-        DepMap_ID,
+        ModelID,
         mean, 
         penetrance,
         cell_line,
-        lineage,
+        OncotreeLineage,
         original_lineage,
-        primary_or_metastasis
+        PrimaryOrMetastasis
         ) %>%
     mutate(
-        lineage = as_factor(lineage),
+        OncotreeLineage = as_factor(OncotreeLineage),
         met_model = as_factor(met_model)
     )
 
 ## Get the nº. lines/compound
 lines_and_mets <- selected_models %>%
     group_by(met_model) %>%
-    summarise(profiled_lines = n_distinct(DepMap_ID)) %>%
+    summarise(profiled_lines = n_distinct(ModelID)) %>%
     as.data.frame()
 
 write.csv(lines_and_mets, file = met_lines_profiled, row.names=FALSE)

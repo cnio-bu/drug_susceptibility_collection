@@ -10,7 +10,7 @@ normalized_arrays           <- readRDS(normalized_arrays)
 compound_to_test            <- read.csv(compound_to_test)
 
 compound_to_test$AUC            <- as.numeric(compound_to_test$AUC)
-compound_to_test$lineage        <- as.factor(compound_to_test$lineage)
+compound_to_test$OncotreeLineage       <- as.factor(compound_to_test$OncotreeLineage)
 
 
 ## Subset the arrays
@@ -19,7 +19,7 @@ normalized_arrays  <- normalized_arrays[,lines_to_test]
 
 rownames(compound_to_test) <- compound_to_test$CELL_LINE_NAME
 
-design <- model.matrix(~lineage + AUC, data=compound_to_test)
+design <- model.matrix(~OncotreeLineage + AUC, data=compound_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 normalized_arrays <- normalized_arrays[,rownames(design)]

@@ -12,7 +12,7 @@ ccle_counts           <- readRDS(raw_gene_counts)
 dep_to_test           <- read.csv(dep_to_test)
 
 dep_to_test$probability         <- as.numeric(dep_to_test$probability)
-dep_to_test$lineage             <- as.factor(dep_to_test$lineage)
+dep_to_test$OncotreeLineage             <- as.factor(dep_to_test$OncotreeLineage)
 
 ## Subset the counts
 lines_to_test <- dep_to_test$cell_line
@@ -21,7 +21,7 @@ count_matrix  <- ccle_counts[,lines_to_test]
 rownames(dep_to_test) <- dep_to_test$cell_line
 
 ## voom model
-design <- model.matrix(~lineage + probability, data=dep_to_test)
+design <- model.matrix(~OncotreeLineage + probability, data=dep_to_test)
 
 ## reorder count_matrix so that cols matches rows from design
 count_matrix <- count_matrix[,rownames(design)]
